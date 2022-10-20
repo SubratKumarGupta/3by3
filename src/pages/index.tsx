@@ -3,7 +3,25 @@ import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import T3TBoard from "../components/board";
-
+import {
+  DndContext,
+  useDroppable,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  useSortable,
+  SortableContext,
+  rectSwappingStrategy,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { useState } from "react";
 
 const AuthShowcase: React.FC = () => {
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
@@ -30,8 +48,41 @@ const AuthShowcase: React.FC = () => {
   );
 };
 
+type SelectorCardProps = {
+  id: string;
+  name: string;
+};
+const SelectorCard = ({ name, id }: SelectorCardProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+  return (
+    <div
+      style={style}
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      className=" m-2 flex aspect-square w-[84%] touch-none items-center justify-center bg-orange-500 text-sm"
+    >
+      {name}
+    </div>
+  );
+};
 
-
+type SelectorProps = {
+  name: string;
+};
+const Selector = ({ name }: SelectorProps) => {
+  return (
+    <div className=" row-span-2 h-[100vh] w-[35vw] bg-zinc-800 ">
+      <div>{/*searchbar*/}</div>
+      <DndContext>{/* SelectorCard */}</DndContext>
+    </div>
+  );
+};
 
 const Home: NextPage = () => {
   const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
@@ -43,19 +94,27 @@ const Home: NextPage = () => {
         <meta name="3x3" content="create a 3x3" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="container  items-center justify-center">
-     
-         <T3TBoard name="jojo"/>
-        <div className="flex w-full items-center justify-center pt-2 text-2xl text-blue-500">
+
+      <main
+        className="
+        h-[100vh]
+        w-[100vw]
+       items-center 
+       justify-center"
+      >
+        <div className="grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center bg-teal-200">
+          <T3TBoard name="jojo" />
+          <Selector name="ANIME" />
+        </div>
+
+        {/* <div className="flex w-full items-center justify-center pt-2 text-2xl text-blue-500">
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
         </div>
 
-      <AuthShowcase />
+        <AuthShowcase /> */}
       </main>
     </>
   );
 };
 
 export default Home;
-
-
