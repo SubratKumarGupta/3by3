@@ -13,15 +13,9 @@ import {
   useSensors,
   DragEndEvent,
 } from "@dnd-kit/core";
-import {
-  arrayMove,
-  useSortable,
-  SortableContext,
-  rectSwappingStrategy,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
+import { gql } from "graphql-request";
+import { useQuery } from "@tanstack/react-query";
 
 const AuthShowcase: React.FC = () => {
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
@@ -50,24 +44,22 @@ const AuthShowcase: React.FC = () => {
 
 type SelectorCardProps = {
   id: string;
-  name: string;
+  titleEng: string;
+  titleRom: string;
+  isAdult: boolean;
+  img: string;
+  format: string;
+  type: string;
 };
-const SelectorCard = ({ name, id }: SelectorCardProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+const SelectorCard = ({ id }: SelectorCardProps) => {
   return (
-    <div
-      style={style}
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      className=" m-2 flex aspect-square w-[84%] touch-none items-center justify-center bg-orange-500 text-sm"
-    >
-      {name}
+    <div className=" mx-auto flex h-24 w-[85%] items-center justify-start bg-cyan-400">
+      <img
+        className="mr-3 aspect-[85/115] h-[100%]"
+        src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx127230-FlochcFsyoF4.png"
+        alt="Chainshaw man"
+      />
+      <div>{"chainshaw"}</div>
     </div>
   );
 };
@@ -76,8 +68,10 @@ type SelectorProps = {
   name: string;
 };
 const Selector = ({ name }: SelectorProps) => {
+  const [search, setSearch] = useState<string>("");
+
   return (
-    <div className="row-span-2 grid h-[100vh] w-[100%] grid-flow-row grid-cols-1 grid-rows-[10%] items-start justify-center bg-zinc-800">
+    <div className="row-span-2 grid h-[100vh] w-[100%] grid-flow-row grid-cols-1 grid-rows-[12%] items-start justify-center bg-zinc-800">
       <div className=" m-auto w-[90%]">
         <form className=" w-[100%]">
           <label
@@ -97,9 +91,9 @@ const Selector = ({ name }: SelectorProps) => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 ></path>
               </svg>
@@ -115,7 +109,17 @@ const Selector = ({ name }: SelectorProps) => {
         </form>
       </div>
       <DndContext>
-        {<div className=" h-[100%] w-[100%] bg-orange-500">cards</div>}
+        <div className=" h-[100%] w-[100%]  pt-2">
+          <SelectorCard
+            id={"jojo"}
+            titleEng={""}
+            titleRom={""}
+            format={""}
+            isAdult={false}
+            img={""}
+            type={""}
+          />
+        </div>
       </DndContext>
     </div>
   );

@@ -64,7 +64,8 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-  function handleDragEnd(event: any) {
+  function handleDragEnd(event: DragEndEvent | any) {
+    console.log(event);
     //dangrous
     const { active, over } = event;
 
