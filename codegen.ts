@@ -4,15 +4,18 @@ const config: CodegenConfig = {
   overwrite: true,
   schema: "https://graphql.anilist.co",
   documents: "./src/**/*.graphql",
+
   generates: {
-    "./src/gen.ts": {
+    "./src/generated/gen.tsx": {
       plugins: [
         "typescript",
         "typescript-operations",
         "typescript-react-query",
       ],
       config: {
-        fetcher: "graphql-request",
+        legacyMode: true,
+        pureMagicComment: true,
+        fetch: "graphql-request",
       },
     },
   },

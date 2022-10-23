@@ -10,7 +10,7 @@ const graphqlRequestClient = new GraphQLClient("https://graphql.anilist.co", {
     ["Accept"]: "application/json",
     ["Content-Type"]: "application/json",
 
-    //authorization: "B9WB74eNu9hrEpuTiPZiaCeE5rl4lR314alwhV8S",
+    //authorization: "B9WB74eNu9hrEpuTiPZiaCeE5rl4lR314alwhV8S",./src/gen/graphql.ts
   },
 });
 

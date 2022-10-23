@@ -1,4 +1,4 @@
-query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+query searchAnime($id: Int, $page: Int, $perPage: Int, $search: String) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       total
