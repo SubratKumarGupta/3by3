@@ -10,3 +10,12 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.novisbar::-webkit-scrollbar {
+  display: none;
+}
+
+.novisbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

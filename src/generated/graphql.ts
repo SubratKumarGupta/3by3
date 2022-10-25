@@ -1,28 +1,14 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import { GraphQLClient } from 'graphql-request';
+import { RequestInit } from 'graphql-request/dist/types.dom';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 
-function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, query: string, variables?: TVariables) {
-  return async (): Promise<TData> => {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      ...requestInit,
-      body: JSON.stringify({ query, variables }),
-    });
-
-    const json = await res.json();
-
-    if (json.errors) {
-      const { message } = json.errors[0];
-
-      throw new Error(message);
-    }
-
-    return json.data;
-  }
+function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables, headers?: RequestInit['headers']) {
+  return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers);
 }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -4696,7 +4682,7 @@ export type SearchAnimeQueryVariables = Exact<{
 export type SearchAnimeQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', total?: number | null, currentPage?: number | null, lastPage?: number | null, hasNextPage?: boolean | null, perPage?: number | null } | null, media?: Array<{ __typename?: 'Media', id: number, format?: MediaFormat | null, isAdult?: boolean | null, coverImage?: { __typename?: 'MediaCoverImage', extraLarge?: string | null, large?: string | null, medium?: string | null, color?: string | null } | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, english?: string | null } | null } | null> | null } | null };
 
 
-export const SearchAnimeDocument = /*#__PURE__*/ `
+export const SearchAnimeDocument = `
     query searchAnime($id: Int, $page: Int, $perPage: Int, $search: String) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -4728,12 +4714,13 @@ export const useSearchAnimeQuery = <
       TData = SearchAnimeQuery,
       TError = unknown
     >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      client: GraphQLClient,
       variables?: SearchAnimeQueryVariables,
-      options?: UseQueryOptions<SearchAnimeQuery, TError, TData>
+      options?: UseQueryOptions<SearchAnimeQuery, TError, TData>,
+      headers?: RequestInit['headers']
     ) =>
     useQuery<SearchAnimeQuery, TError, TData>(
       variables === undefined ? ['searchAnime'] : ['searchAnime', variables],
-      fetcher<SearchAnimeQuery, SearchAnimeQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, SearchAnimeDocument, variables),
+      fetcher<SearchAnimeQuery, SearchAnimeQueryVariables>(client, SearchAnimeDocument, variables, headers),
       options
     );
