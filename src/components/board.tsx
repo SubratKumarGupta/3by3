@@ -107,4 +107,5 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
   );
 };
 
-export default T3TBoard;
+export { T3TBoard, BoardCard };
+export type { T3TBoardProps, BoardCardProps };
