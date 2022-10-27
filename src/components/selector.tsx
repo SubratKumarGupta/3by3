@@ -1,10 +1,16 @@
-import { DndContext, DragOverlay, useDraggable } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  useDndMonitor,
+  useDraggable,
+} from "@dnd-kit/core";
 import useStore from "../state";
 import { CSS, Transform } from "@dnd-kit/utilities";
 import { SearchAnimeQuery, useSearchAnimeQuery } from "../generated/graphql";
 import graphqlRequestClient from "../clints/GQLRequestClient";
-import { ChangeEvent, useState } from "react";
-import { SortableContext } from "@dnd-kit/sortable";
+import { ChangeEvent, useEffect, useState } from "react";
+import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -32,17 +38,8 @@ const SelectorCard = ({
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `${JSON.stringify(Id)}`,
   });
-  const string = (transform: Transform | null) => {
-    if (!transform) {
-      return;
-    }
-    const { x, y } = transform;
-    return `translate3d(${x ? Math.round(x) : 0}px, ${
-      y ? Math.round(y) : 0
-    }px, 50000px)`;
-  };
   const style = {
-    transform: string(transform),
+    transform: CSS.Translate.toString(transform),
   };
 
   return (
@@ -126,8 +123,9 @@ type overlayprops = {
 const Overlay = () => {
   const activeId = useStore((state) => state.overlayState);
   console.log(activeId);
+  if (`${activeId}`[0] === "B") return null;
   return (
-    <DragOverlay>
+    <DragOverlay wrapperElement={"div"}>
       {activeId ? (
         <div id={`${activeId.id}`}>
           <img
@@ -149,7 +147,6 @@ const Overlay = () => {
 
 const ListAnime = () => {
   const searchKey = useStore((state) => state.searchKey);
-
   const { data, isLoading, error } = useSearchAnimeQuery<
     SearchAnimeQuery,
     Error
@@ -162,28 +159,27 @@ const ListAnime = () => {
     // DANGR
     return `${media?.id}`;
   });
-
   return (
-    //<SortableContext id={"A"} items={arr}>
-    <>
-      <div className=" h-[100%] w-[100%] overflow-y-scroll pt-2">
-        {data?.Page?.media?.map((media, i) => {
-          return (
-            <SelectorCard
-              key={i}
-              id={media?.id}
-              titleEng={media?.title?.english}
-              titleRom={media?.title?.romaji}
-              isAdult={media?.isAdult}
-              img={media?.coverImage?.medium}
-              format={media?.format}
-            />
-          );
-        })}
-        <Overlay />
-      </div>
-    </>
-    // </SortableContext>
+    <SortableContext id={"A"} items={arr}>
+      <>
+        <div className=" h-[100%] w-[100%] overflow-y-scroll pt-2">
+          {data?.Page?.media?.map((media, i) => {
+            return (
+              <SelectorCard
+                key={i}
+                id={media?.id}
+                titleEng={media?.title?.english}
+                titleRom={media?.title?.romaji}
+                isAdult={media?.isAdult}
+                img={media?.coverImage?.medium}
+                format={media?.format}
+              />
+            );
+          })}
+        </div>
+      </>
+      <Overlay />
+    </SortableContext>
   );
 };
 

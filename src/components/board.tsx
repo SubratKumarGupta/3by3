@@ -1,24 +1,12 @@
-import {
-  DndContext,
-  useDroppable,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from "@dnd-kit/core";
+import { useDroppable, useDndMonitor } from "@dnd-kit/core";
 import {
   arrayMove,
   useSortable,
   SortableContext,
   rectSwappingStrategy,
-  sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useState } from "react";
 import useStore from "../state";
-import { Selector } from "./selector";
 
 type BoardCardProps = {
   id: string;
@@ -68,43 +56,48 @@ type T3TBoardProps = {
 const T3TBoard = ({ name }: T3TBoardProps) => {
   const items = useStore((state) => state.boardItems);
   const setItems = useStore((state) => state.setBoardItems);
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-  function handleDragEnd(event: DragEndEvent | any) {
-    console.log(event);
-    //dangrous
-    const { active, over } = event;
-    console.log("bddd");
-    if (active.id !== over.id) {
-      const newItems = (items: string[]) => {
-        console.log("aaaa");
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
+  const setActiveId = useStore((state) => state.setOverlayState);
 
-        return arrayMove(items, oldIndex, newIndex);
-      };
-      setItems(newItems(items));
-    }
-  }
-  //const names:string=["jojo","tokyo re","kakushigoto","watamote","HxH","chainshaw man","stinse gate","mob physho","spy femily"]
+  useDndMonitor({
+    onDragStart(event: any) {
+      console.log(event);
+      if (event.active.data.current?.sortable?.containerId === "B") {
+        setActiveId(event.active.id);
+      } else {
+        setActiveId(JSON.parse(event.active.id));
+      }
+    },
+    onDragEnd(event: any) {
+      console.log(event);
+      //if (event.active.data.current === undefined) {
+      setActiveId(null);
+      //} else {
+      //dangrous
+      const { active, over } = event;
+      console.log("bddd");
+      if (over === null) return;
+      if (active.id !== over.id) {
+        console.log("aaaa");
+        const newItems = (items: string[]) => {
+          const oldIndex = items.indexOf(active.id);
+          const newIndex = items.indexOf(over.id);
+
+          return arrayMove(items, oldIndex, newIndex);
+        };
+        setItems(newItems(items));
+      }
+      //}
+    },
+  });
+
   return (
-    <DndContext
-      sensors={sensors}
-      onDragEnd={handleDragEnd}
-      collisionDetection={closestCenter}
-    >
-      <SortableContext id={"B"} strategy={rectSwappingStrategy} items={items}>
-        <div className="m-[7px] grid aspect-square w-[50%] grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-gray-800 text-center">
-          {items.map((code) => (
-            <BoardCard key={code} id={code} name={code} /> // have to render it with map or it will brake
-          ))}
-        </div>
-      </SortableContext>
-    </DndContext>
+    <SortableContext id={"B"} strategy={rectSwappingStrategy} items={items}>
+      <div className="m-[7px] grid aspect-square w-[50%] grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-gray-800 text-center">
+        {items.map((code) => (
+          <BoardCard key={code} id={code} name={code} /> // have to render it with map or it will brake
+        ))}
+      </div>
+    </SortableContext>
   );
 };
 

@@ -7,9 +7,8 @@ const useStore = create<{
   setBoardItems: (newBoardItems: string[]) => void;
   searchKey: string | null;
   setSearchkey: (newSearchKey: string | null) => void;
-
   overlayState: overlayprops | null;
-  setOverlayState: (newstate: overlayprops | null) => void;
+  setOverlayState: (newstate: overlayprops | null) => void; //change
 }>((set) => ({
   overlayState: null,
   setOverlayState: (newstate: overlayprops | null) =>
