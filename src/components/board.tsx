@@ -17,6 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
+import useStore from "../state";
 
 type BoardCardProps = {
   id: string;
@@ -46,18 +47,8 @@ type T3TBoardProps = {
   name: string;
 };
 const T3TBoard = ({ name }: T3TBoardProps) => {
-  const [items, setItems] = useState([
-    "B1",
-    "B2",
-    "B3",
-    "B4",
-    "B5",
-    "B6",
-    "B7",
-    "B8",
-    "B9",
-  ]);
-  console.table(items);
+  const items = useStore((state) => state.boardItems);
+  const setItems = useStore((state) => state.setBoardItems);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -68,14 +59,16 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
     console.log(event);
     //dangrous
     const { active, over } = event;
-
+    console.log("bddd");
     if (active.id !== over.id) {
-      setItems((items) => {
+      const newItems = (items: string[]) => {
+        console.log("aaaa");
         const oldIndex = items.indexOf(active.id);
         const newIndex = items.indexOf(over.id);
 
         return arrayMove(items, oldIndex, newIndex);
-      });
+      };
+      setItems(newItems(items));
     }
   }
   //const names:string=["jojo","tokyo re","kakushigoto","watamote","HxH","chainshaw man","stinse gate","mob physho","spy femily"]

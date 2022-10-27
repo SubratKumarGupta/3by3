@@ -4,7 +4,17 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { T3TBoard } from "../components/board";
 import { Selector } from "../components/selector";
-import { DndContext } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import useStore from "../state";
 
 const AuthShowcase: React.FC = () => {
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
@@ -30,6 +40,16 @@ const AuthShowcase: React.FC = () => {
     </div>
   );
 };
+const DndElements: React.FC = () => {
+  return (
+    <DndContext>
+      <div className="grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center bg-teal-200">
+        <T3TBoard name="jojo" />
+        <Selector name="ANIME" />
+      </div>
+    </DndContext>
+  );
+};
 
 const Home: NextPage = () => {
   const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
@@ -49,11 +69,7 @@ const Home: NextPage = () => {
        items-center 
        justify-center"
       >
-        <div className="grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center bg-teal-200">
-          <T3TBoard name="jojo" />
-          <Selector name="ANIME" />
-        </div>
-
+        <DndElements />
         {/* <div className="flex w-full items-center justify-center pt-2 text-2xl text-blue-500">
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
         </div>
