@@ -1,8 +1,10 @@
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, DragOverlay, useDraggable } from "@dnd-kit/core";
 import useStore from "../state";
+import { CSS, Transform } from "@dnd-kit/utilities";
 import { SearchAnimeQuery, useSearchAnimeQuery } from "../generated/graphql";
 import graphqlRequestClient from "../clints/GQLRequestClient";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
+import { SortableContext } from "@dnd-kit/sortable";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -20,8 +22,38 @@ const SelectorCard = ({
   titleRom,
   format,
 }: SelectorCardProps) => {
+  const Id: overlayprops = {
+    id,
+    titleEng,
+    img,
+    titleRom,
+    format,
+  };
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: `${JSON.stringify(Id)}`,
+  });
+  const string = (transform: Transform | null) => {
+    if (!transform) {
+      return;
+    }
+    const { x, y } = transform;
+    return `translate3d(${x ? Math.round(x) : 0}px, ${
+      y ? Math.round(y) : 0
+    }px, 50000px)`;
+  };
+  const style = {
+    transform: string(transform),
+  };
+
   return (
-    <div className="mx-auto mb-3 flex h-24 w-[85%] items-center justify-start bg-cyan-400">
+    <div
+      style={style}
+      {...listeners}
+      {...attributes}
+      ref={setNodeRef}
+      id={`${JSON.stringify(Id)}`}
+      className="mx-auto mb-3 flex h-24 w-[85%] items-center justify-start bg-cyan-400"
+    >
       <img
         className="mr-3 aspect-[85/115] h-[100%]"
         src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
@@ -84,8 +116,40 @@ const SearchBar = () => {
   );
 };
 
+type overlayprops = {
+  id: number | undefined;
+  titleEng: string | null | undefined;
+  titleRom: string | null | undefined;
+  img: string | null | undefined;
+  format: string | null | undefined;
+};
+const Overlay = () => {
+  const activeId = useStore((state) => state.overlayState);
+  console.log(activeId);
+  return (
+    <DragOverlay>
+      {activeId ? (
+        <div id={`${activeId.id}`}>
+          <img
+            className="mr-3 aspect-[85/115] h-[100%]"
+            src={`${
+              activeId.img
+                ? activeId.img
+                : "https://www.freeiconspng.com/img/23486"
+            }`}
+            alt={`anime image of ${
+              activeId.titleEng ? activeId.titleEng : activeId.titleRom
+            }`}
+          />
+        </div>
+      ) : null}
+    </DragOverlay>
+  );
+};
+
 const ListAnime = () => {
   const searchKey = useStore((state) => state.searchKey);
+
   const { data, isLoading, error } = useSearchAnimeQuery<
     SearchAnimeQuery,
     Error
@@ -93,9 +157,15 @@ const ListAnime = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{`${error}`}</div>;
   if (data?.Page?.media?.length === 0) return <div>NOT FOUND</div>;
-  console.log(data, isLoading, error);
+
+  const arr: any = data?.Page?.media?.map((media, i) => {
+    // DANGR
+    return `${media?.id}`;
+  });
+
   return (
-    <DndContext>
+    //<SortableContext id={"A"} items={arr}>
+    <>
       <div className=" h-[100%] w-[100%] overflow-y-scroll pt-2">
         {data?.Page?.media?.map((media, i) => {
           return (
@@ -110,8 +180,10 @@ const ListAnime = () => {
             />
           );
         })}
+        <Overlay />
       </div>
-    </DndContext>
+    </>
+    // </SortableContext>
   );
 };
 
@@ -128,4 +200,4 @@ const Selector = ({ name }: SelectorProps) => {
 };
 
 export { Selector, SearchBar, ListAnime, SelectorCard };
-export type { SelectorProps, SelectorCardProps };
+export type { SelectorProps, SelectorCardProps, overlayprops };

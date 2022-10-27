@@ -18,10 +18,28 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
 import useStore from "../state";
+import { Selector } from "./selector";
 
 type BoardCardProps = {
   id: string;
   name: string;
+};
+
+const DropArea = () => {
+  const { isOver, setNodeRef } = useDroppable({
+    id: "droppable",
+  });
+  const style = {
+    color: isOver ? "green" : undefined,
+  };
+
+  return (
+    <div
+      className=" h-[100%] w-[100%] bg-slate-400"
+      ref={setNodeRef}
+      style={style}
+    ></div>
+  );
 };
 const BoardCard = ({ name, id }: BoardCardProps) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -38,6 +56,7 @@ const BoardCard = ({ name, id }: BoardCardProps) => {
       {...listeners}
       className=" m-2 flex aspect-square w-[84%] touch-none items-center justify-center bg-orange-500 text-sm"
     >
+      <DropArea />
       {name}
     </div>
   );
@@ -78,22 +97,11 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
       onDragEnd={handleDragEnd}
       collisionDetection={closestCenter}
     >
-      <SortableContext strategy={rectSwappingStrategy} items={items}>
+      <SortableContext id={"B"} strategy={rectSwappingStrategy} items={items}>
         <div className="m-[7px] grid aspect-square w-[50%] grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-gray-800 text-center">
           {items.map((code) => (
             <BoardCard key={code} id={code} name={code} /> // have to render it with map or it will brake
           ))}
-
-          {/* <BoardCard id={"B2"} name={"tokyo re"} />
-          <BoardCard id={"B3"} name={"HxH"} />
-
-          <BoardCard id={"B4"} name={"stinse gate"} />
-          <BoardCard id={"B5"} name={"mob physho"} />
-          <BoardCard id={"B6"} name={"spy femily"} />
-
-          <BoardCard id={"B7"} name={"chainshaw man"} />
-          <BoardCard id={"B8"} name={"watamote"} />
-          <BoardCard id={"B9"} name={"kakushigoto"} /> */}
         </div>
       </SortableContext>
     </DndContext>

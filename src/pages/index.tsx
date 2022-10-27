@@ -41,8 +41,27 @@ const AuthShowcase: React.FC = () => {
   );
 };
 const DndElements: React.FC = () => {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  const setActiveId = useStore((state) => state.setOverlayState);
+  function handleDragStart(event: DragEndEvent | any) {
+    setActiveId(JSON.parse(event.active.id));
+  }
+  function handleDragEnd(event: DragEndEvent | any) {
+    console.log(event);
+    setActiveId(null);
+  }
   return (
-    <DndContext>
+    <DndContext
+      sensors={sensors}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      collisionDetection={closestCenter}
+    >
       <div className="grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center bg-teal-200">
         <T3TBoard name="jojo" />
         <Selector name="ANIME" />
