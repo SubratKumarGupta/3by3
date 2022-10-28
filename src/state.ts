@@ -1,10 +1,17 @@
 import create from "zustand";
 import produce from "immer";
 import { overlayprops } from "./components/selector";
+import { type } from "os";
 
+type boardItems = {
+  id: string;
+  img: string | null;
+  name: string | null;
+  format: string | null;
+};
 const useStore = create<{
-  boardItems: string[];
-  setBoardItems: (newBoardItems: string[]) => void;
+  boardItems: boardItems[];
+  setBoardItems: (newBoardItems: boardItems[]) => void;
   searchKey: string | null;
   setSearchkey: (newSearchKey: string | null) => void;
   overlayState: overlayprops | null;
@@ -13,12 +20,68 @@ const useStore = create<{
   overlayState: null,
   setOverlayState: (newstate: overlayprops | null) =>
     set({ overlayState: newstate }),
-  boardItems: ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9"],
-  setBoardItems: (newBoardItems: string[]) =>
+  boardItems: [
+    {
+      id: "B1",
+      format: null,
+      img: null,
+      name: "B1",
+    },
+    {
+      id: "B2",
+      format: null,
+      img: null,
+      name: "B2",
+    },
+    {
+      id: "B3",
+      format: null,
+      img: null,
+      name: "B3",
+    },
+    {
+      id: "B4",
+      format: null,
+      img: null,
+      name: "B4",
+    },
+    {
+      id: "B5",
+      format: null,
+      img: null,
+      name: "B5",
+    },
+    {
+      id: "B6",
+      format: null,
+      img: null,
+      name: "B6",
+    },
+    {
+      id: "B7",
+      format: null,
+      img: null,
+      name: "B7",
+    },
+    {
+      id: "B8",
+      format: null,
+      img: null,
+      name: "B8",
+    },
+    {
+      id: "B9",
+      format: null,
+      img: null,
+      name: "B9",
+    },
+  ],
+  setBoardItems: (newBoardItems: boardItems[]) =>
     set({ boardItems: newBoardItems }),
   searchKey: null,
   setSearchkey: (newSearchKey: string | null) =>
     set({ searchKey: newSearchKey }),
 }));
+export type { boardItems };
 
 export default useStore;

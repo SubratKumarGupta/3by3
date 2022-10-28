@@ -7,10 +7,15 @@ import {
 } from "@dnd-kit/core";
 import useStore from "../state";
 import { CSS, Transform } from "@dnd-kit/utilities";
-import { SearchAnimeQuery, useSearchAnimeQuery } from "../generated/graphql";
+import {
+  Media,
+  SearchAnimeQuery,
+  useSearchAnimeQuery,
+} from "../generated/graphql";
 import graphqlRequestClient from "../clints/GQLRequestClient";
 import { ChangeEvent, useEffect, useState } from "react";
 import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
+import { string } from "zod";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -123,7 +128,13 @@ type overlayprops = {
 const Overlay = () => {
   const activeId = useStore((state) => state.overlayState);
   console.log(activeId);
+  const isNUM = (str: string) => {
+    const parsed = parseInt(str, 10);
+    if (parsed === undefined) return false;
+    return !isNaN(parsed);
+  };
   if (`${activeId}`[0] === "B") return null;
+  if (isNUM(`${activeId}`)) return null;
   return (
     <DragOverlay wrapperElement={"div"}>
       {activeId ? (
@@ -146,6 +157,18 @@ const Overlay = () => {
 };
 
 const ListAnime = () => {
+  const items = useStore(
+    (state) => state.boardItems,
+    (a, b) => {
+      for (let i = 0; i < b.length; i++) {
+        console.log("ggff", b[i]!.id === a[i]?.id);
+        if (b[i]!.id === a[i]?.id) {
+          return false;
+        }
+      }
+      return true;
+    }
+  );
   const searchKey = useStore((state) => state.searchKey);
   const { data, isLoading, error } = useSearchAnimeQuery<
     SearchAnimeQuery,
@@ -154,25 +177,51 @@ const ListAnime = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{`${error}`}</div>;
   if (data?.Page?.media?.length === 0) return <div>NOT FOUND</div>;
+  const filterlist: { [key: string]: string } = items.reduce(function (
+    map: { [key: string]: string },
+    obj
+  ) {
+    map[obj.id] = obj.name!;
+    return map;
+  },
+  {});
+  const media: SelectorCardProps[] = [];
+  const temp = data?.Page?.media;
+  //console.log("ggff", filterlist);
 
-  const arr: any = data?.Page?.media?.map((media, i) => {
-    // DANGR
-    return `${media?.id}`;
+  for (let i = 0; i < temp!.length; i++) {
+    const card = temp![i];
+    console.log("check", filterlist[card!.id] === undefined);
+    if (filterlist[card!.id] !== undefined) continue;
+    const tempcard: SelectorCardProps = {
+      id: card?.id,
+      titleEng: card?.title?.english,
+      titleRom: card?.title?.romaji,
+      isAdult: card?.isAdult,
+      img: card?.coverImage?.medium,
+      format: card?.format,
+    };
+    media.push(tempcard);
+  }
+
+  const arr: string[] = media!.map((media: SelectorCardProps, i: number) => {
+    return `${media.id}`;
   });
+
   return (
     <SortableContext id={"A"} items={arr}>
       <>
         <div className=" h-[100%] w-[100%] overflow-y-scroll pt-2">
-          {data?.Page?.media?.map((media, i) => {
+          {media!.map((media: SelectorCardProps, i: number) => {
             return (
               <SelectorCard
                 key={i}
-                id={media?.id}
-                titleEng={media?.title?.english}
-                titleRom={media?.title?.romaji}
-                isAdult={media?.isAdult}
-                img={media?.coverImage?.medium}
-                format={media?.format}
+                id={media.id}
+                titleEng={media.titleEng}
+                titleRom={media.titleRom}
+                isAdult={media.isAdult}
+                img={media.img}
+                format={media.format}
               />
             );
           })}

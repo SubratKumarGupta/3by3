@@ -6,7 +6,8 @@ import {
   rectSwappingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import useStore from "../state";
+import { number } from "zod";
+import useStore, { boardItems } from "../state";
 
 type BoardCardProps = {
   id: string;
@@ -31,7 +32,7 @@ const DropArea = () => {
 };
 const BoardCard = ({ name, id }: BoardCardProps) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+    useSortable({ id: `${id}` });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -44,7 +45,6 @@ const BoardCard = ({ name, id }: BoardCardProps) => {
       {...listeners}
       className=" m-2 flex aspect-square w-[84%] touch-none items-center justify-center bg-orange-500 text-sm"
     >
-      <DropArea />
       {name}
     </div>
   );
@@ -57,10 +57,8 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
   const items = useStore((state) => state.boardItems);
   const setItems = useStore((state) => state.setBoardItems);
   const setActiveId = useStore((state) => state.setOverlayState);
-
   useDndMonitor({
     onDragStart(event: any) {
-      console.log(event);
       if (event.active.data.current?.sortable?.containerId === "B") {
         setActiveId(event.active.id);
       } else {
@@ -68,24 +66,97 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
       }
     },
     onDragEnd(event: any) {
-      console.log(event);
-      //if (event.active.data.current === undefined) {
       setActiveId(null);
-      //} else {
-      //dangrous
       const { active, over } = event;
-      console.log("bddd");
-      if (over === null) return;
-      if (active.id !== over.id) {
-        console.log("aaaa");
-        const newItems = (items: string[]) => {
-          const oldIndex = items.indexOf(active.id);
-          const newIndex = items.indexOf(over.id);
+      if (event.active.data.current?.sortable?.containerId === "B") {
+        console.log("===B");
+        if (active.id !== over.id) {
+          const newItems = (items: boardItems[]) => {
+            const oldIndex = items.findIndex(function (items) {
+              return items.id === over.id;
+            });
+            const newIndex = items.findIndex(function (items) {
+              return items.id === active.id;
+            });
+            console.log(oldIndex, over.id, newIndex, active.id, "kkkkkkkkkk");
 
-          return arrayMove(items, oldIndex, newIndex);
+            // const oldIndex = items.findIndex(function (items) {
+            //   return items.id === over.id;
+            // });
+            // const newIndex = items.findIndex(function (items) {
+            //   return items.id === active.id;
+            // });
+            const swap = (
+              items: boardItems[],
+              oldIndex: number,
+              newIndex: number
+            ) => {
+              const output = [...items];
+              const temp = output[oldIndex];
+              output[oldIndex] = output[newIndex]!;
+              output[newIndex] = temp!;
+              console.log("prrrr", output === items, oldIndex, newIndex);
+              return output;
+              // console.log(output === items);
+            };
+            return swap(items, oldIndex, newIndex);
+            //return arrayMove(items, oldIndex, newIndex);
+          };
+          // console.log(
+          //   "prrrr",
+          //   newItems(items) == items,
+          //   items,
+          //   newItems(items)
+          // );
+          setItems(newItems(items));
+        }
+      } else {
+        console.log("!!!B");
+        if (over === null) return;
+        type moveAcativeType = {
+          format: string;
+          id: number;
+          img: string;
+          titleEng: string;
+          titleRom: string;
         };
-        setItems(newItems(items));
+        const moveAcative: moveAcativeType = JSON.parse(active.id);
+        if (moveAcative.id !== over.id) {
+          console.log("change");
+
+          const newItems = (items: boardItems[]) => {
+            const overIndex = items.findIndex(function (items) {
+              return;
+            });
+            const output: boardItems[] = [];
+            console.log(overIndex, over.id);
+            for (let i = 0; i < items.length; i++) {
+              const item: any = items[i];
+              if (item.id === over.id) {
+                output.push({
+                  id: `${moveAcative.id}`,
+                  img: moveAcative.img,
+                  name: `${
+                    moveAcative.titleEng
+                      ? moveAcative.titleEng
+                      : moveAcative.titleRom
+                  }`,
+                  format: moveAcative.format,
+                });
+              } else {
+                output.push(item);
+              }
+            }
+            return output;
+          };
+          console.log("ruuuuuuuuuuuuuuuu", newItems(items), items);
+          console.log("ruuuuuuuuuuuuuuuu", newItems(items) === items);
+          setItems(newItems(items));
+        }
       }
+
+      console.log("bddd");
+
       //}
     },
   });
@@ -93,8 +164,8 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
   return (
     <SortableContext id={"B"} strategy={rectSwappingStrategy} items={items}>
       <div className="m-[7px] grid aspect-square w-[50%] grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-gray-800 text-center">
-        {items.map((code) => (
-          <BoardCard key={code} id={code} name={code} /> // have to render it with map or it will brake
+        {items.map((item, i) => (
+          <BoardCard key={i} id={item.id} name={`${item.name}`} /> // have to render it with map or it will brake
         ))}
       </div>
     </SortableContext>
