@@ -1,4 +1,5 @@
 import { useDroppable, useDndMonitor } from "@dnd-kit/core";
+import Image from "next/image";
 import {
   arrayMove,
   useSortable,
@@ -8,29 +9,16 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { number } from "zod";
 import useStore, { boardItems } from "../state";
+import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 
 type BoardCardProps = {
   id: string;
   name: string;
+  format: string;
+  img: string;
 };
 
-const DropArea = () => {
-  const { isOver, setNodeRef } = useDroppable({
-    id: "droppable",
-  });
-  const style = {
-    color: isOver ? "green" : undefined,
-  };
-
-  return (
-    <div
-      className=" h-[100%] w-[100%] bg-slate-400"
-      ref={setNodeRef}
-      style={style}
-    ></div>
-  );
-};
-const BoardCard = ({ name, id }: BoardCardProps) => {
+const BoardCard = ({ name, id, img, format }: BoardCardProps) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: `${id}` });
   const style = {
@@ -43,9 +31,20 @@ const BoardCard = ({ name, id }: BoardCardProps) => {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className=" m-2 flex aspect-square w-[84%] touch-none items-center justify-center bg-orange-500 text-sm"
+      className="z-50 flex aspect-square h-[100%] w-[100%] touch-none items-center justify-center text-sm"
     >
-      {name}
+      {img ? (
+        <div className=" relative h-[95%] w-[95%]">
+          <Image
+            quality={90}
+            src={`${img}`}
+            alt={`anime image of anime`}
+            layout={"fill"}
+            objectFit={"cover"}
+          />
+        </div>
+      ) : null}
+      {/* <div>{name}</div> */}
     </div>
   );
 };
@@ -163,9 +162,15 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
 
   return (
     <SortableContext id={"B"} strategy={rectSwappingStrategy} items={items}>
-      <div className="m-[7px] grid aspect-square w-[50%] grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-gray-800 text-center">
+      <div className="grid aspect-square w-[50%] grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-gray-800 text-center">
         {items.map((item, i) => (
-          <BoardCard key={i} id={item.id} name={`${item.name}`} /> // have to render it with map or it will brake
+          <BoardCard
+            key={i}
+            id={item.id}
+            format={item.format!}
+            img={item.img!}
+            name={`${item.name}`}
+          /> // have to render it with map or it will brake
         ))}
       </div>
     </SortableContext>

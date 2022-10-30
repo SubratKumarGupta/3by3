@@ -15,7 +15,7 @@ function defineNextConfig(config) {
 
 export default defineNextConfig({
   images: {
-    domains: ["s4.anilist.co", "freeiconspng.com"],
+    domains: ["s4.anilist.co", "www.freeiconspng.com"],
   },
   reactStrictMode: true,
   swcMinify: true,

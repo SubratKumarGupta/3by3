@@ -222,7 +222,7 @@ const ListAnime = () => {
   return (
     <SortableContext id={"A"} items={arr}>
       <>
-        <div className=" h-[100%] w-[100%] overflow-y-scroll pt-2">
+        <div className=" h-[100%] w-[100%] overflow-x-hidden pt-2 scrollbar-hide">
           {media!.map((media: SelectorCardProps, i: number) => {
             return (
               <SelectorCard
