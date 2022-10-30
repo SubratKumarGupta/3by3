@@ -52,7 +52,7 @@ const DndElements: React.FC = () => {
 
   return (
     <>
-      <DndContext sensors={sensors} collisionDetection={closestCenter}>
+      <DndContext sensors={sensors}>
         <div className="grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center bg-teal-200">
           <T3TBoard name="jojo" />
           <Selector name="ANIME" />

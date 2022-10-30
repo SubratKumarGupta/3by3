@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   DndContext,
   DragEndEvent,
@@ -56,11 +57,21 @@ const SelectorCard = ({
       id={`${JSON.stringify(Id)}`}
       className="mx-auto mb-3 flex h-24 w-[85%] items-center justify-start bg-cyan-400"
     >
-      <img
+      <div className=" relative mr-3 aspect-[85/115] h-[100%]">
+        <Image
+          src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
+          alt={`anime image of ${titleEng ? titleEng : titleRom}`}
+          layout={"fill"}
+          // height={96}
+          // width={70.948}
+        />
+      </div>
+
+      {/* <img
         className="mr-3 aspect-[85/115] h-[100%]"
         src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
         alt={`anime image of ${titleEng ? titleEng : titleRom}`}
-      />
+      /> */}
       <div>{`${titleEng ? titleEng : titleRom}`}</div>
     </div>
   );
@@ -173,7 +184,7 @@ const ListAnime = () => {
   const { data, isLoading, error } = useSearchAnimeQuery<
     SearchAnimeQuery,
     Error
-  >(graphqlRequestClient, { search: searchKey });
+  >(graphqlRequestClient, { search: searchKey }, { staleTime: 1000 * 60 * 15 }); //15min
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{`${error}`}</div>;
   if (data?.Page?.media?.length === 0) return <div>NOT FOUND</div>;

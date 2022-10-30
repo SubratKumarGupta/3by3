@@ -14,6 +14,9 @@ function defineNextConfig(config) {
 }
 
 export default defineNextConfig({
+  images: {
+    domains: ["s4.anilist.co", "freeiconspng.com"],
+  },
   reactStrictMode: true,
   swcMinify: true,
   // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
