@@ -69,6 +69,7 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
       const { active, over } = event;
       if (event.active.data.current?.sortable?.containerId === "B") {
         console.log("===B");
+        console.log(over);
         if (active.id !== over.id) {
           const newItems = (items: boardItems[]) => {
             const oldIndex = items.findIndex(function (items) {

@@ -5,13 +5,15 @@ import { trpc } from "../utils/trpc";
 import { T3TBoard } from "../components/board";
 import { Selector } from "../components/selector";
 import {
-  closestCenter,
+  rectIntersection,
   DndContext,
   DragEndEvent,
   KeyboardSensor,
   PointerSensor,
+  useDndContext,
   useSensor,
   useSensors,
+  closestCorners,
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import useStore from "../state";
@@ -41,8 +43,24 @@ const AuthShowcase: React.FC = () => {
     </div>
   );
 };
+function CustomPreset() {
+  const {
+    activatorEvent,
+    active,
+    activeNodeRect,
+    containerNodeRect,
+    draggableNodes,
+    droppableContainers,
+    dragOverlay,
+    over,
+    measuringConfiguration,
+    scrollableAncestors,
+    scrollableAncestorRects,
+    windowRect,
+  } = useDndContext();
+  console.log("ggs", dragOverlay);
+}
 const DndElements: React.FC = () => {
-  console.log("jsjsjs");
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -52,7 +70,7 @@ const DndElements: React.FC = () => {
 
   return (
     <>
-      <DndContext sensors={sensors}>
+      <DndContext sensors={sensors} collisionDetection={closestCorners}>
         <div className="grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center bg-teal-200">
           <T3TBoard name="jojo" />
           <Selector name="ANIME" />
@@ -78,7 +96,8 @@ const Home: NextPage = () => {
         h-[100vh]
         w-[100vw]
        items-center 
-       justify-center"
+       justify-center overflow-hidden
+       "
       >
         <DndElements />
         {/* <div className="flex w-full items-center justify-center pt-2 text-2xl text-blue-500">

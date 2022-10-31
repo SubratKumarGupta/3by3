@@ -34,6 +34,22 @@ const SelectorCard = ({
   titleRom,
   format,
 }: SelectorCardProps) => {
+  const checkSelect = (
+    activeId: overlayprops | null,
+    id: number | undefined
+  ) => {
+    if (activeId?.id === undefined || activeId?.id === null) return false;
+    if (id === undefined || id === null) return false;
+    if (activeId?.id !== id) return false;
+    return true;
+  };
+  const activeId = useStore(
+    (state) => state.overlayState
+    // (b) => {
+    //   return checkSelect(b, id);
+    // }
+  );
+
   const Id: overlayprops = {
     id,
     titleEng,
@@ -48,32 +64,60 @@ const SelectorCard = ({
     transform: CSS.Translate.toString(transform),
   };
 
+  console.log("gop", checkSelect(activeId, id));
   return (
-    <div
-      style={style}
-      {...listeners}
-      {...attributes}
-      ref={setNodeRef}
-      id={`${JSON.stringify(Id)}`}
-      className="mx-auto mb-3 flex h-24 w-[85%] items-center justify-start bg-cyan-400"
-    >
-      <div className=" relative mr-3 aspect-[85/115] h-[100%]">
-        <Image
-          src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
-          alt={`anime image of ${titleEng ? titleEng : titleRom}`}
-          layout={"fill"}
-          // height={96}
-          // width={70.948}
-        />
-      </div>
-
-      {/* <img
+    <>
+      {checkSelect(activeId, id) ? (
+        <div
+          style={style}
+          {...listeners}
+          {...attributes}
+          ref={setNodeRef}
+          id={`${JSON.stringify(Id)}`}
+          className="mx-auto  flex h-24 w-[30%] items-center justify-center"
+        >
+          <div className=" relative mr-3 aspect-[85/115] h-[100%]">
+            <Image
+              src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
+              alt={`anime image of ${titleEng ? titleEng : titleRom}`}
+              layout={"fill"}
+              // height={96}
+              // width={70.948}
+            />
+          </div>
+          {/* <img
         className="mr-3 aspect-[85/115] h-[100%]"
         src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
         alt={`anime image of ${titleEng ? titleEng : titleRom}`}
       /> */}
-      <div>{`${titleEng ? titleEng : titleRom}`}</div>
-    </div>
+        </div>
+      ) : (
+        <div
+          style={style}
+          {...listeners}
+          {...attributes}
+          ref={setNodeRef}
+          id={`${JSON.stringify(Id)}`}
+          className="mx-auto mb-3 flex h-24 w-[85%] items-center justify-start bg-cyan-400"
+        >
+          <div className=" relative mr-3 aspect-[85/115] h-[100%]">
+            <Image
+              src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
+              alt={`anime image of ${titleEng ? titleEng : titleRom}`}
+              layout={"fill"}
+              // height={96}
+              // width={70.948}
+            />
+          </div>
+          {/* <img
+        className="mr-3 aspect-[85/115] h-[100%]"
+        src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
+        alt={`anime image of ${titleEng ? titleEng : titleRom}`}
+      /> */}
+          <div>{`${titleEng ? titleEng : titleRom}`}</div>
+        </div>
+      )}
+    </>
   );
 };
 const SearchBar = () => {
@@ -198,7 +242,7 @@ const ListAnime = () => {
   {});
   const media: SelectorCardProps[] = [];
   const temp = data?.Page?.media;
-  //console.log("ggff", filterlist);
+  console.log("ggff");
 
   for (let i = 0; i < temp!.length; i++) {
     const card = temp![i];
