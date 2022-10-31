@@ -13,8 +13,9 @@ import {
   SearchAnimeQuery,
   useSearchAnimeQuery,
 } from "../generated/graphql";
+import debounce from "lodash.debounce";
 import graphqlRequestClient from "../clints/GQLRequestClient";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { string } from "zod";
 
@@ -74,9 +75,9 @@ const SelectorCard = ({
           {...attributes}
           ref={setNodeRef}
           id={`${JSON.stringify(Id)}`}
-          className="mx-auto  flex h-24 w-[30%] items-center justify-center"
+          className="mx-auto flex  h-24 w-[30%] touch-manipulation items-center justify-center"
         >
-          <div className=" relative mr-3 aspect-[85/115] h-[100%]">
+          <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
             <Image
               src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
               alt={`anime image of ${titleEng ? titleEng : titleRom}`}
@@ -98,9 +99,9 @@ const SelectorCard = ({
           {...attributes}
           ref={setNodeRef}
           id={`${JSON.stringify(Id)}`}
-          className="mx-auto mb-3 flex h-24 w-[85%] items-center justify-start bg-cyan-400"
+          className="mx-auto mb-3 flex h-24 w-[85%] touch-manipulation items-center justify-start bg-cyan-400"
         >
-          <div className=" relative mr-3 aspect-[85/115] h-[100%]">
+          <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
             <Image
               src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
               alt={`anime image of ${titleEng ? titleEng : titleRom}`}
@@ -122,16 +123,15 @@ const SelectorCard = ({
 };
 const SearchBar = () => {
   const setSearchKey = useStore((state) => state.setSearchkey);
-  const handelOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const timeout = setTimeout(() => {
-      let value = null;
-      if (e.target.value !== "") {
-        value = e.target.value;
-      }
-      setSearchKey(value);
-    }, 500);
-    return () => clearTimeout(timeout);
+
+  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = null;
+    if (e.target.value !== "") {
+      value = e.target.value;
+    }
+    setSearchKey(value);
   };
+  const handelOnChange = useCallback(debounce(changeHandler, 600), []);
   return (
     <div className=" m-auto w-[90%]">
       <form className=" w-[100%]">
@@ -193,18 +193,22 @@ const Overlay = () => {
   return (
     <DragOverlay wrapperElement={"div"}>
       {activeId ? (
-        <div id={`${activeId.id}`}>
-          <img
-            className="mr-3 aspect-[85/115] h-[100%]"
-            src={`${
-              activeId.img
-                ? activeId.img
-                : "https://www.freeiconspng.com/img/23486"
-            }`}
-            alt={`anime image of ${
-              activeId.titleEng ? activeId.titleEng : activeId.titleRom
-            }`}
-          />
+        <div className="touch-manipulation" id={`${activeId.id}`}>
+          <div className=" relative aspect-[85/115] h-[100%]">
+            <Image
+              src={`${
+                activeId.img
+                  ? activeId.img
+                  : "https://www.freeiconspng.com/img/23486"
+              }`}
+              alt={`anime image of ${
+                activeId.titleEng ? activeId.titleEng : activeId.titleRom
+              }`}
+              layout={"fill"}
+              // height={96}
+              // width={70.948}
+            />
+          </div>
         </div>
       ) : null}
     </DragOverlay>
