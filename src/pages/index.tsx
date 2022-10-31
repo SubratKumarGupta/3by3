@@ -71,7 +71,7 @@ const DndElements: React.FC = () => {
   return (
     <>
       <DndContext sensors={sensors} collisionDetection={closestCorners}>
-        <div className="grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center bg-teal-200">
+        <div className="bg grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center">
           <T3TBoard name="jojo" />
           <Selector name="ANIME" />
         </div>
@@ -92,11 +92,11 @@ const Home: NextPage = () => {
       </Head>
 
       <main
-        className="
-        h-[100vh]
+        className=" h-[100vh]
         w-[100vw]
-       items-center 
-       justify-center overflow-hidden
+        items-center
+       justify-center 
+       overflow-hidden bg-dark-gradint-1
        "
       >
         <DndElements />

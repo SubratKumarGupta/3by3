@@ -18,6 +18,7 @@ import graphqlRequestClient from "../clints/GQLRequestClient";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { string } from "zod";
+import { displayValue } from "@tanstack/react-query-devtools/build/lib/utils";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -82,15 +83,8 @@ const SelectorCard = ({
               src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
               alt={`anime image of ${titleEng ? titleEng : titleRom}`}
               layout={"fill"}
-              // height={96}
-              // width={70.948}
             />
           </div>
-          {/* <img
-        className="mr-3 aspect-[85/115] h-[100%]"
-        src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
-        alt={`anime image of ${titleEng ? titleEng : titleRom}`}
-      /> */}
         </div>
       ) : (
         <div
@@ -99,23 +93,26 @@ const SelectorCard = ({
           {...attributes}
           ref={setNodeRef}
           id={`${JSON.stringify(Id)}`}
-          className="mx-auto mb-3 flex h-24 w-[85%] touch-manipulation items-center justify-start bg-cyan-400"
+          className="relative mx-auto mb-3 flex h-24 w-[85%] touch-manipulation items-center justify-start rounded-r-xl border border-transparent bg-[#000000] text-[#ffffff] hover:border-blue-500"
         >
           <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
             <Image
               src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
               alt={`anime image of ${titleEng ? titleEng : titleRom}`}
               layout={"fill"}
-              // height={96}
-              // width={70.948}
             />
           </div>
-          {/* <img
-        className="mr-3 aspect-[85/115] h-[100%]"
-        src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
-        alt={`anime image of ${titleEng ? titleEng : titleRom}`}
-      /> */}
-          <div>{`${titleEng ? titleEng : titleRom}`}</div>
+          <div className=" flex h-[100%]  flex-col justify-around align-top">
+            {isAdult ? (
+              <div className=" absolute bottom-0 right-0 mb-2 mr-2 rounded-md bg-red-500 text-white">
+                18+
+              </div>
+            ) : null}
+            <div className=" relative mr-[6px] overflow-hidden text-sky-500 after:absolute after:right-0 after:bottom-0 after:inline-block after:content-[...] ">
+              {`${titleEng ? titleEng : titleRom}`}
+            </div>
+            <div className=" ">{format}</div>
+          </div>
         </div>
       )}
     </>
@@ -296,7 +293,7 @@ type SelectorProps = {
 };
 const Selector = ({ name }: SelectorProps) => {
   return (
-    <div className="row-span-2 grid h-[100vh] w-[100%] grid-flow-row grid-cols-1 grid-rows-[12%] items-start justify-center bg-stone-300">
+    <div className="row-span-2 grid h-[100vh] w-[100%] grid-flow-row grid-cols-1 grid-rows-[12%] items-start justify-center bg-[#000a18]">
       <SearchBar />
       <ListAnime />
     </div>
