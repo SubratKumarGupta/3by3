@@ -25,6 +25,7 @@ const BoardCard = ({ name, id, img, format }: BoardCardProps) => {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  console.log(img);
   return (
     <div
       style={style}
@@ -36,7 +37,7 @@ const BoardCard = ({ name, id, img, format }: BoardCardProps) => {
       {img ? (
         <div className=" relative h-[95%] w-[95%]">
           <Image
-            quality={90}
+            quality={100}
             src={`${img}`}
             alt={`anime image of anime`}
             layout={"fill"}
@@ -167,7 +168,7 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
 
   return (
     <SortableContext id={"B"} strategy={rectSwappingStrategy} items={items}>
-      <div className="grid aspect-square w-96 touch-manipulation grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-[#000a18] text-center">
+      <div className="grid aspect-square w-[30rem] touch-manipulation grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-[#000a18] text-center">
         {items.map((item, i) => (
           <BoardCard
             key={i}

@@ -69,7 +69,7 @@ const SelectorCard = ({
     transform: CSS.Translate.toString(transform),
   };
 
-  console.log("gop", checkSelect(activeId, id));
+  console.log("gop", img);
   return (
     <>
       {checkSelect(activeId, id) ? (
@@ -83,7 +83,11 @@ const SelectorCard = ({
         >
           <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
             <Image
-              src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
+              src={`${
+                img
+                  ? img.replace("large", "small")
+                  : "https://www.freeiconspng.com/img/23486"
+              }`}
               alt={`anime image of ${titleEng ? titleEng : titleRom}`}
               layout={"fill"}
             />
@@ -100,7 +104,11 @@ const SelectorCard = ({
         >
           <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
             <Image
-              src={`${img ? img : "https://www.freeiconspng.com/img/23486"}`}
+              src={`${
+                img
+                  ? img.replace("large", "small")
+                  : "https://www.freeiconspng.com/img/23486"
+              }`}
               alt={`anime image of ${titleEng ? titleEng : titleRom}`}
               layout={"fill"}
             />
@@ -299,7 +307,7 @@ const ListAnime = () => {
       titleEng: card?.title?.english,
       titleRom: card?.title?.romaji,
       isAdult: card?.isAdult,
-      img: card?.coverImage?.medium,
+      img: card?.coverImage?.extraLarge,
       format: card?.format,
     };
     media.push(tempcard);
