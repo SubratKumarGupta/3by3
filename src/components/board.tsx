@@ -167,7 +167,7 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
 
   return (
     <SortableContext id={"B"} strategy={rectSwappingStrategy} items={items}>
-      <div className="grid aspect-square w-[50%] touch-manipulation grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-[#000a18] text-center">
+      <div className="grid aspect-square w-96 touch-manipulation grid-flow-dense grid-cols-3 grid-rows-3 items-center justify-items-center bg-[#000a18] text-center">
         {items.map((item, i) => (
           <BoardCard
             key={i}
