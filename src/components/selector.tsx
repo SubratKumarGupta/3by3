@@ -18,7 +18,7 @@ import graphqlRequestClient from "../clints/GQLRequestClient";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { string } from "zod";
-import { displayValue } from "@tanstack/react-query-devtools/build/lib/utils";
+import { animeSearchCache } from "../generated/searchCache";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -229,7 +229,17 @@ const ListAnime = () => {
   const { data, isLoading, error } = useSearchAnimeQuery<
     SearchAnimeQuery,
     Error
-  >(graphqlRequestClient, { search: searchKey }, { staleTime: 1000 * 60 * 15 }); //15min
+  >(
+    graphqlRequestClient,
+    { search: searchKey }, //animeSearchCache.data
+    {
+      staleTime: 1000 * 60 * 15,
+      initialData: () => {
+        if (searchKey === null) return animeSearchCache.data;
+        return undefined;
+      },
+    }
+  ); //15min
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{`${error}`}</div>;
   if (data?.Page?.media?.length === 0) return <div>NOT FOUND</div>;
