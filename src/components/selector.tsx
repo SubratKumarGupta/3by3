@@ -19,6 +19,9 @@ import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { string } from "zod";
 import { animeSearchCache } from "../generated/searchCache";
+import { LoadingList } from "./loadingList";
+import { NotFound } from "./notFound";
+import errorMap from "zod/lib/locales/en";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -93,7 +96,7 @@ const SelectorCard = ({
           {...attributes}
           ref={setNodeRef}
           id={`${JSON.stringify(Id)}`}
-          className="relative mx-auto mb-3 flex h-24 w-[85%] touch-manipulation items-center justify-start rounded-r-xl border border-transparent bg-[#000000] text-[#ffffff] hover:border-blue-500"
+          className="group relative mx-auto mb-3 flex h-24 w-[85%] touch-manipulation items-center justify-start rounded-r-xl border border-transparent bg-[#031631] text-[#ffffff] hover:border-blue-500"
         >
           <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
             <Image
@@ -103,6 +106,25 @@ const SelectorCard = ({
             />
           </div>
           <div className=" flex h-[100%]  flex-col justify-around align-top">
+            <div className=" absolute top-0 right-0 hidden h-4 w-4 touch-manipulation hover:bg-blue-700 group-hover:flex">
+              <a
+                target="_blank"
+                rel="noopener"
+                className="h-7 w-7"
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  console.log("click a");
+                }}
+                href={`https://anilist.co/anime/${id}`}
+              >
+                <Image
+                  src={"/img/redirect.png"}
+                  alt={`redirict`}
+                  layout={"fill"}
+                />
+              </a>
+            </div>
+
             {isAdult ? (
               <div className=" absolute bottom-0 right-0 mb-2 mr-2 rounded-md bg-red-500 text-white">
                 18+
@@ -240,9 +262,22 @@ const ListAnime = () => {
       },
     }
   ); //15min
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{`${error}`}</div>;
-  if (data?.Page?.media?.length === 0) return <div>NOT FOUND</div>;
+  if (isLoading)
+    return (
+      <div>
+        <LoadingList />
+      </div>
+    );
+  if (error)
+    return (
+      <div className=" mr-auto ml-auto mt-8 flex h-96 w-[90%] flex-col items-center justify-center rounded-xl bg-[#031631] text-2xl text-sky-500">{`${error}`}</div>
+    );
+  if (data?.Page?.media?.length === 0)
+    return (
+      <div>
+        <NotFound searchkey={searchKey} />
+      </div>
+    );
   const filterlist: { [key: string]: string } = items.reduce(function (
     map: { [key: string]: string },
     obj

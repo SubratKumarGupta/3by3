@@ -96,7 +96,8 @@ const Home: NextPage = () => {
         w-[100vw]
         items-center
        justify-center 
-       overflow-hidden bg-dark-gradint-1
+       overflow-hidden bg-black
+        bg-dark-gradint-1
        "
       >
         <DndElements />

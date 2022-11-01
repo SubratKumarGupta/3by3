@@ -43,7 +43,11 @@ const BoardCard = ({ name, id, img, format }: BoardCardProps) => {
             objectFit={"cover"}
           />
         </div>
-      ) : null}
+      ) : (
+        <div className="relative flex h-[95%] w-[95%] items-center justify-center bg-sky-500 opacity-5 hover:opacity-10">
+          <span className="text-lg opacity-100">Drag In</span>
+        </div>
+      )}
       {/* <div>{name}</div> */}
     </div>
   );
