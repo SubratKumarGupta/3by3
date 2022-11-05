@@ -1,7 +1,6 @@
 import { GraphQLClient } from "graphql-request";
 import { RequestInit } from "graphql-request/dist/types.dom";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { type } from "os";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -17,11 +16,11 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
 function fetcher<TData, TVariables>(
   client: GraphQLClient,
   query: string,
-  variables?: TVariables | any,
+  variables?: TVariables,
   headers?: RequestInit["headers"]
 ) {
   return async (): Promise<TData> =>
-    client.request<TData, TVariables | any>(query, variables, headers);
+    client.request<TData, any>(query, variables, headers);
 }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -4591,6 +4590,46 @@ export type SearchAnimeQuery = {
   } | null;
 };
 
+export type SearchMangaQueryVariables = Exact<{
+  id?: InputMaybe<Scalars["Int"]>;
+  page?: InputMaybe<Scalars["Int"]>;
+  perPage?: InputMaybe<Scalars["Int"]>;
+  search?: InputMaybe<Scalars["String"]>;
+}>;
+
+export type SearchMangaQuery = {
+  __typename?: "Query";
+  Page?: {
+    __typename?: "Page";
+    pageInfo?: {
+      __typename?: "PageInfo";
+      total?: number | null;
+      currentPage?: number | null;
+      lastPage?: number | null;
+      hasNextPage?: boolean | null;
+      perPage?: number | null;
+    } | null;
+    media?: Array<{
+      __typename?: "Media";
+      id: number;
+      format?: MediaFormat | null;
+      isAdult?: boolean | null;
+      coverImage?: {
+        __typename?: "MediaCoverImage";
+        extraLarge?: string | null;
+        large?: string | null;
+        medium?: string | null;
+        color?: string | null;
+      } | null;
+      title?: {
+        __typename?: "MediaTitle";
+        romaji?: string | null;
+        english?: string | null;
+      } | null;
+    } | null> | null;
+  } | null;
+};
+
 export const SearchAnimeDocument = `
     query searchAnime($id: Int, $page: Int, $perPage: Int, $search: String) {
   Page(page: $page, perPage: $perPage) {
@@ -4630,6 +4669,50 @@ export const useSearchAnimeQuery = <TData = SearchAnimeQuery, TError = unknown>(
     fetcher<SearchAnimeQuery, SearchAnimeQueryVariables>(
       client,
       SearchAnimeDocument,
+      variables,
+      headers
+    ),
+    options
+  );
+export const SearchMangaDocument = `
+    query searchManga($id: Int, $page: Int, $perPage: Int, $search: String) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      currentPage
+      lastPage
+      hasNextPage
+      perPage
+    }
+    media(id: $id, type: MANGA, sort: POPULARITY_DESC, search: $search) {
+      id
+      coverImage {
+        extraLarge
+        large
+        medium
+        color
+      }
+      format
+      isAdult
+      title {
+        romaji
+        english
+      }
+    }
+  }
+}
+    `;
+export const useSearchMangaQuery = <TData = SearchMangaQuery, TError = unknown>(
+  client: GraphQLClient,
+  variables?: SearchMangaQueryVariables,
+  options?: UseQueryOptions<SearchMangaQuery, TError, TData>,
+  headers?: RequestInit["headers"]
+) =>
+  useQuery<SearchMangaQuery, TError, TData>(
+    variables === undefined ? ["searchManga"] : ["searchManga", variables],
+    fetcher<SearchMangaQuery, SearchMangaQueryVariables>(
+      client,
+      SearchMangaDocument,
       variables,
       headers
     ),

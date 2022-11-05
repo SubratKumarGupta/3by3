@@ -6,21 +6,21 @@ import {
   useDndMonitor,
   useDraggable,
 } from "@dnd-kit/core";
-import useStore from "../state";
+import useAnimeDndStore from "../../../state";
 import { CSS, Transform } from "@dnd-kit/utilities";
 import {
   Media,
   SearchAnimeQuery,
   useSearchAnimeQuery,
-} from "../generated/graphql";
+} from "../../../generated/graphql";
 import debounce from "lodash.debounce";
-import graphqlRequestClient from "../clints/GQLRequestClient";
+import graphqlRequestClient from "../../../clints/GQLRequestClient";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { string } from "zod";
-import { animeSearchCache } from "../generated/searchCache";
-import { LoadingList } from "./loadingList";
-import { NotFound } from "./notFound";
+import { animeSearchCache } from "../../../generated/searchAnimeCache";
+import { LoadingList } from "../../loadingList";
+import { NotFound } from "../../notFound";
 import errorMap from "zod/lib/locales/en";
 
 type SelectorCardProps = {
@@ -39,7 +39,7 @@ const SelectorCard = ({
   titleRom,
   format,
 }: SelectorCardProps) => {
-  const checkSelect = (
+  const checkSelected = (
     activeId: overlayprops | null,
     id: number | undefined
   ) => {
@@ -48,10 +48,10 @@ const SelectorCard = ({
     if (activeId?.id !== id) return false;
     return true;
   };
-  const activeId = useStore(
+  const activeId = useAnimeDndStore(
     (state) => state.overlayState
     // (b) => {
-    //   return checkSelect(b, id);
+    //   return checkSelected(b, id);
     // }
   );
 
@@ -72,7 +72,7 @@ const SelectorCard = ({
   console.log("gop", img);
   return (
     <>
-      {checkSelect(activeId, id) ? (
+      {checkSelected(activeId, id) ? (
         <div
           style={style}
           {...listeners}
@@ -148,8 +148,9 @@ const SelectorCard = ({
     </>
   );
 };
+
 const SearchBar = () => {
-  const setSearchKey = useStore((state) => state.setSearchkey);
+  const setSearchKey = useAnimeDndStore((state) => state.setSearchkey);
 
   const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     let value = null;
@@ -208,7 +209,7 @@ type overlayprops = {
   format: string | null | undefined;
 };
 const Overlay = () => {
-  const activeId = useStore((state) => state.overlayState);
+  const activeId = useAnimeDndStore((state) => state.overlayState);
   console.log(activeId);
   const isNUM = (str: string) => {
     const parsed = parseInt(str, 10);
@@ -243,7 +244,7 @@ const Overlay = () => {
 };
 
 const ListAnime = () => {
-  const items = useStore(
+  const items = useAnimeDndStore(
     (state) => state.boardItems,
     (a, b) => {
       for (let i = 0; i < b.length; i++) {
@@ -255,7 +256,7 @@ const ListAnime = () => {
       return true;
     }
   );
-  const searchKey = useStore((state) => state.searchKey);
+  const searchKey = useAnimeDndStore((state) => state.searchKey);
   const { data, isLoading, error } = useSearchAnimeQuery<
     SearchAnimeQuery,
     Error

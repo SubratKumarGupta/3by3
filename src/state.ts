@@ -1,7 +1,5 @@
 import create from "zustand";
-import produce from "immer";
-import { overlayprops } from "./components/selector";
-import { type } from "os";
+import { overlayprops } from "./components/anime/searchAndSelect/searchAndSelect";
 
 type boardItems = {
   id: string;
@@ -9,7 +7,7 @@ type boardItems = {
   name: string | null;
   format: string | null;
 };
-const useStore = create<{
+const useAnimeDndStore = create<{
   boardItems: boardItems[];
   setBoardItems: (newBoardItems: boardItems[]) => void;
   searchKey: string | null;
@@ -84,4 +82,4 @@ const useStore = create<{
 }));
 export type { boardItems };
 
-export default useStore;
+export default useAnimeDndStore;

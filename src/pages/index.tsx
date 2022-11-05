@@ -2,22 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
-import { T3TBoard } from "../components/board";
-import { Selector } from "../components/selector";
-import {
-  rectIntersection,
-  DndContext,
-  DragEndEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useDndContext,
-  useSensor,
-  useSensors,
-  closestCorners,
-} from "@dnd-kit/core";
-import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import useStore from "../state";
-import { useEffect } from "react";
+import { AnimeDndElements } from "../components/anime/animeDnd";
 
 const AuthShowcase: React.FC = () => {
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
@@ -43,42 +28,6 @@ const AuthShowcase: React.FC = () => {
     </div>
   );
 };
-function CustomPreset() {
-  const {
-    activatorEvent,
-    active,
-    activeNodeRect,
-    containerNodeRect,
-    draggableNodes,
-    droppableContainers,
-    dragOverlay,
-    over,
-    measuringConfiguration,
-    scrollableAncestors,
-    scrollableAncestorRects,
-    windowRect,
-  } = useDndContext();
-  console.log("ggs", dragOverlay);
-}
-const DndElements: React.FC = () => {
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  return (
-    <>
-      <DndContext sensors={sensors} collisionDetection={closestCorners}>
-        <div className="bg grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center">
-          <T3TBoard name="jojo" />
-          <Selector name="ANIME" />
-        </div>
-      </DndContext>
-    </>
-  );
-};
 
 const Home: NextPage = () => {
   const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
@@ -100,7 +49,7 @@ const Home: NextPage = () => {
         bg-dark-gradint-1
        "
       >
-        <DndElements />
+        <AnimeDndElements />
         {/* <div className="flex w-full items-center justify-center pt-2 text-2xl text-blue-500">
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
         </div>
