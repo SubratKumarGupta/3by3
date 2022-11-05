@@ -225,7 +225,7 @@ const Overlay = () => {
             <Image
               src={`${
                 activeId.img
-                  ? activeId.img
+                  ? activeId.img.replace("large", "small")
                   : "https://www.freeiconspng.com/img/23486"
               }`}
               alt={`anime image of ${
