@@ -43,7 +43,7 @@ export const AnimeSearchCard = ({
           <div className=" absolute top-0 right-0 mt-1 mr-1 hidden h-4 w-4 touch-manipulation hover:bg-blue-700 group-hover:flex">
             <a
               target="_blank"
-              rel="noopener"
+              rel="noreferrer"
               className="h-7 w-7"
               onPointerDown={(e) => {
                 e.stopPropagation();

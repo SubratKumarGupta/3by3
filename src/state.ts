@@ -1,5 +1,5 @@
 import create from "zustand";
-import { overlayprops } from "./components/anime/searchAndSelect/searchAndSelect";
+import { overlayprops } from "./components/anime/Overlay";
 
 type boardItems = {
   id: string;
