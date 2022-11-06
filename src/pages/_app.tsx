@@ -17,6 +17,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <SessionProvider session={session}>
+        {/* <header className="flex h-10 w-full items-center justify-center bg-black text-cyan-400">
+          alal
+        </header> */}
         <Component {...pageProps} />
       </SessionProvider>
     </QueryClientProvider>

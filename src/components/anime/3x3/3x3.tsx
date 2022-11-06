@@ -8,8 +8,10 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { number } from "zod";
-import useStore, { boardItems } from "../state";
+import useAnimeDndStore, { boardItems } from "../../../state";
 import { imageConfigDefault } from "next/dist/shared/lib/image-config";
+import { swapItemsInAnIndex } from "../../utils/swapItemsInAnIndex";
+import { updateIndex } from "../../utils/updateIndex";
 
 type BoardCardProps = {
   id: string;
@@ -57,112 +59,64 @@ const BoardCard = ({ name, id, img, format }: BoardCardProps) => {
 type T3TBoardProps = {
   name: string;
 };
+type moveAcativeType = {
+  format: string;
+  id: number;
+  img: string;
+  titleEng: string;
+  titleRom: string;
+};
 const T3TBoard = ({ name }: T3TBoardProps) => {
-  const items = useStore((state) => state.boardItems);
-  const setItems = useStore((state) => state.setBoardItems);
-  const setActiveId = useStore((state) => state.setOverlayState);
+  const items = useAnimeDndStore((state) => state.boardItems);
+  const setItems = useAnimeDndStore((state) => state.setBoardItems);
+  const setActiveId = useAnimeDndStore((state) => state.setOverlayState);
   useDndMonitor({
     onDragStart(event: any) {
+      /**check if new item is from selector or just a rearrangment */
       if (event.active.data.current?.sortable?.containerId === "B") {
+        /*for rearramgment*/
         setActiveId(event.active.id);
       } else {
+        /*for new selector item */
         setActiveId(JSON.parse(event.active.id));
       }
     },
-    onDragEnd(event: any) {
+    onDragEnd(event) {
       setActiveId(null);
+
       const { active, over } = event;
+      if (over === null) return; // handel miss fire
+      /**check if new item is from selector or just a rearrangment */
       if (event.active.data.current?.sortable?.containerId === "B") {
-        console.log("===B");
-        console.log(over);
+        /*for rearramgment*/
+
+        /**check if select grid item is over a new grid item */
         if (active.id !== over.id) {
           const newItems = (items: boardItems[]) => {
+            /**get id for both grid Items */
             const oldIndex = items.findIndex(function (items) {
               return items.id === over.id;
             });
             const newIndex = items.findIndex(function (items) {
               return items.id === active.id;
             });
-            console.log(oldIndex, over.id, newIndex, active.id, "kkkkkkkkkk");
 
-            // const oldIndex = items.findIndex(function (items) {
-            //   return items.id === over.id;
-            // });
-            // const newIndex = items.findIndex(function (items) {
-            //   return items.id === active.id;
-            // });
-            const swap = (
-              items: boardItems[],
-              oldIndex: number,
-              newIndex: number
-            ) => {
-              const output = [...items];
-              const temp = output[oldIndex];
-              output[oldIndex] = output[newIndex]!;
-              output[newIndex] = temp!;
-              console.log("prrrr", output === items, oldIndex, newIndex);
-              return output;
-              // console.log(output === items);
-            };
-            return swap(items, oldIndex, newIndex);
-            //return arrayMove(items, oldIndex, newIndex);
+            /**swap both items position in the array */
+            return swapItemsInAnIndex(items, oldIndex, newIndex);
           };
-          // console.log(
-          //   "prrrr",
-          //   newItems(items) == items,
-          //   items,
-          //   newItems(items)
-          // );
+          /**update state new array*/
           setItems(newItems(items));
         }
       } else {
-        console.log("!!!B");
-        if (over === null) return;
-        type moveAcativeType = {
-          format: string;
-          id: number;
-          img: string;
-          titleEng: string;
-          titleRom: string;
-        };
-        const moveAcative: moveAcativeType = JSON.parse(active.id);
-        if (moveAcative.id !== over.id) {
-          console.log("change");
+        /*for new selector item */
 
-          const newItems = (items: boardItems[]) => {
-            const overIndex = items.findIndex(function (items) {
-              return;
-            });
-            const output: boardItems[] = [];
-            console.log(overIndex, over.id);
-            for (let i = 0; i < items.length; i++) {
-              const item: any = items[i];
-              if (item.id === over.id) {
-                output.push({
-                  id: `${moveAcative.id}`,
-                  img: moveAcative.img,
-                  name: `${
-                    moveAcative.titleEng
-                      ? moveAcative.titleEng
-                      : moveAcative.titleRom
-                  }`,
-                  format: moveAcative.format,
-                });
-              } else {
-                output.push(item);
-              }
-            }
-            return output;
-          };
-          console.log("ruuuuuuuuuuuuuuuu", newItems(items), items);
-          console.log("ruuuuuuuuuuuuuuuu", newItems(items) === items);
-          setItems(newItems(items));
+        //get new item info from id
+        const moveAcative: moveAcativeType = JSON.parse(`${active.id}`);
+        if (moveAcative.id !== over.id) {
+          //update state
+          setItems(updateIndex(moveAcative, items, over));
         }
       }
-
-      console.log("bddd");
-
-      //}
     },
   });
 
@@ -184,4 +138,4 @@ const T3TBoard = ({ name }: T3TBoardProps) => {
 };
 
 export { T3TBoard, BoardCard };
-export type { T3TBoardProps, BoardCardProps };
+export type { T3TBoardProps, BoardCardProps, moveAcativeType };

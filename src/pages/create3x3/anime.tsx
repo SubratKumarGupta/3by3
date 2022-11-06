@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
+import { AnimeDndElements } from "../../components/anime/animeDnd";
 
 const AuthShowcase: React.FC = () => {
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
@@ -48,11 +49,13 @@ const Home: NextPage = () => {
         bg-dark-gradint-1
        "
       >
-        <div className="flex w-full items-center justify-center pt-2 text-2xl text-blue-500">
+        <AnimeDndElements />
+
+        {/* <div className="flex w-full items-center justify-center pt-2 text-2xl text-blue-500">
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
         </div>
 
-        <AuthShowcase />
+        <AuthShowcase /> */}
       </main>
     </>
   );
