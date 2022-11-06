@@ -1,4 +1,4 @@
-import { overlayprops } from "../anime/searchAndSelect/searchAndSelect";
+import { overlayprops } from "../anime/Overlay";
 
 export const checkSelected = (
   activeId: overlayprops | null,

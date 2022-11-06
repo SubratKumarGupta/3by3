@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { trpc } from "../utils/trpc";
-import { AnimeDndElements } from "../components/anime/animeDnd";
+import { trpc } from "../../utils/trpc";
+import { AnimeDndElements } from "../../components/anime/animeDnd";
 
 const AuthShowcase: React.FC = () => {
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();

@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { DragOverlay, useDraggable } from "@dnd-kit/core";
-import useAnimeDndStore from "../../../state";
+import useAnimeDndStore, { boardItems } from "../../../state";
 import { CSS } from "@dnd-kit/utilities";
 import {
   SearchAnimeQuery,
   useSearchAnimeQuery,
 } from "../../../generated/graphql";
 import graphqlRequestClient from "../../../clints/GQLRequestClient";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useMemo } from "react";
 import { SortableContext } from "@dnd-kit/sortable";
 import { animeSearchCache } from "../../../generated/searchAnimeCache";
 import { LoadingList } from "../../loadingList";
@@ -18,6 +18,10 @@ import { checkSelected } from "../../utils/checkSelected";
 import { AnimeSearchCard } from "./AnimeSearchCard";
 import { UnderOverlay } from "../../utils/UnderOverlay";
 import { SearchBarUi } from "../../utils/searchBar";
+import { compare } from "../../utils/compareBoarditems";
+import { Overlay, overlayprops } from "../Overlay";
+import { create } from "lodash";
+import { createFilterCheckList } from "../../utils/createFilterCheckList";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -95,69 +99,13 @@ const SearchBar = () => {
   return <SearchBarUi changeHandler={changeHandler} debouncetime={600} />;
 };
 
-type overlayprops = {
-  id: number | undefined;
-  titleEng: string | null | undefined;
-  titleRom: string | null | undefined;
-  img: string | null | undefined;
-  format: string | null | undefined;
-};
-const Overlay = () => {
-  const activeId = useAnimeDndStore((state) => state.overlayState);
-  console.log(activeId);
-  const isNUM = (str: string) => {
-    const parsed = parseInt(str, 10);
-    if (parsed === undefined) return false;
-    return !isNaN(parsed);
-  };
-  if (`${activeId}`[0] === "B") return null;
-  if (isNUM(`${activeId}`)) return null;
-  return (
-    <DragOverlay wrapperElement={"div"}>
-      {activeId ? (
-        <div className="touch-manipulation" id={`${activeId.id}`}>
-          <div className=" relative aspect-[85/115] h-[100%]">
-            <Image
-              quality={60}
-              src={`${
-                activeId.img
-                  ? activeId.img
-                  : "https://www.freeiconspng.com/img/23486"
-              }`}
-              alt={`anime image of ${
-                activeId.titleEng ? activeId.titleEng : activeId.titleRom
-              }`}
-              layout={"fill"}
-              // height={96}
-              // width={70.948}
-            />
-          </div>
-        </div>
-      ) : null}
-    </DragOverlay>
-  );
-};
-
 const ListAnime = () => {
-  const items = useAnimeDndStore(
-    (state) => state.boardItems,
-    (a, b) => {
-      for (let i = 0; i < b.length; i++) {
-        console.log("ggff", b[i]!.id === a[i]?.id);
-        if (b[i]!.id === a[i]?.id) {
-          return false;
-        }
-      }
-      return true;
-    }
-  );
+  const items = useAnimeDndStore((state) => state.boardItems, compare);
   const searchKey = useAnimeDndStore((state) => state.searchKey);
-  const { data, isLoading, error } = useSearchAnimeQuery<
-    SearchAnimeQuery,
-    Error
-  >(
-    graphqlRequestClient,
-    { search: searchKey }, //animeSearchCache.data
+
+  /* prettier-ignore */
+  const { data, isLoading, error } = useSearchAnimeQuery<SearchAnimeQuery,Error>( graphqlRequestClient,
+    {search: searchKey },
     {
       staleTime: 1000 * 60 * 15,
       initialData: () => {
@@ -166,74 +114,63 @@ const ListAnime = () => {
       },
     }
   ); //15min
-  if (isLoading)
-    return (
-      <div>
-        <LoadingList />
-      </div>
-    );
-  if (error)
-    return (
-      <div className=" mr-auto ml-auto mt-8 flex h-96 w-[90%] flex-col items-center justify-center rounded-xl bg-[#031631] text-2xl text-sky-500">{`${error}`}</div>
-    );
-  if (data?.Page?.media?.length === 0)
-    return (
-      <div>
-        <NotFound searchkey={searchKey} />
-      </div>
-    );
-  const filterlist: { [key: string]: string } = items.reduce(function (
-    map: { [key: string]: string },
-    obj
-  ) {
-    map[obj.id] = obj.name!;
-    return map;
-  },
-  {});
-  const media: SelectorCardProps[] = [];
-  const temp = data?.Page?.media;
-  console.log("ggff");
+  /* prettier-ignore */
+  if (isLoading)return (<div><LoadingList /></div>);
+  /* prettier-ignore */
+  if (error)return (<div className=" mr-auto ml-auto mt-8 flex h-96 w-[90%] flex-col items-center justify-center rounded-xl bg-[#031631] text-2xl text-sky-500">{`${error}`}</div>);
+  /* prettier-ignore */ //for no match found
+  if (data?.Page?.media?.length === 0) return (<div><NotFound searchkey={searchKey} /></div>);
 
-  for (let i = 0; i < temp!.length; i++) {
-    const card = temp![i];
-    console.log("check", filterlist[card!.id] === undefined);
-    if (filterlist[card!.id] !== undefined) continue;
-    const tempcard: SelectorCardProps = {
-      id: card?.id,
-      titleEng: card?.title?.english,
-      titleRom: card?.title?.romaji,
-      isAdult: card?.isAdult,
-      img: card?.coverImage?.extraLarge,
-      format: card?.format,
-    };
-    media.push(tempcard);
-  }
-
-  const arr: string[] = media!.map((media: SelectorCardProps, i: number) => {
-    return `${media.id}`;
-  });
-
+  const filteredMidia = (
+    data: SearchAnimeQuery,
+    items: boardItems[],
+    createFilterCheckList: (items: boardItems[]) => {
+      [key: string]: string;
+    }
+  ) => {
+    const media: SelectorCardProps[] = [];
+    const temp = data?.Page?.media;
+    console.log("ggff");
+    const filteredlist = createFilterCheckList(items); //create a diskinory of board items to check aganest
+    for (let i = 0; i < temp!.length; i++) {
+      const card = temp![i];
+      console.log("check", filteredlist);
+      if (filteredlist[card!.id] !== undefined) continue;
+      const tempcard: SelectorCardProps = {
+        id: card?.id,
+        titleEng: card?.title?.english,
+        titleRom: card?.title?.romaji,
+        isAdult: card?.isAdult,
+        img: card?.coverImage?.extraLarge,
+        format: card?.format,
+      };
+      media.push(tempcard);
+    }
+    return media;
+  };
+  const media = useMemo(
+    () => filteredMidia(data, items, createFilterCheckList),
+    [data, items]
+  );
   return (
-    <SortableContext id={"A"} items={arr}>
-      <>
-        <div className=" h-[100%] w-[100%] overflow-x-hidden pt-2 scrollbar-hide">
-          {media!.map((media: SelectorCardProps, i: number) => {
-            return (
-              <SelectorCard
-                key={i}
-                id={media.id}
-                titleEng={media.titleEng}
-                titleRom={media.titleRom}
-                isAdult={media.isAdult}
-                img={media.img}
-                format={media.format}
-              />
-            );
-          })}
-        </div>
-      </>
-      <Overlay />
-    </SortableContext>
+    <>
+      <div className=" h-[100%] w-[100%] overflow-x-hidden pt-2 scrollbar-hide">
+        {media.map((media: SelectorCardProps, i: number) => {
+          return (
+            <SelectorCard
+              key={i}
+              id={media.id}
+              titleEng={media.titleEng}
+              titleRom={media.titleRom}
+              isAdult={media.isAdult}
+              img={media.img}
+              format={media.format}
+            />
+          );
+        })}
+        <Overlay />
+      </div>
+    </>
   );
 };
 
@@ -250,4 +187,4 @@ const Selector = ({ name }: SelectorProps) => {
 };
 
 export { Selector, SearchBar, ListAnime, SelectorCard };
-export type { SelectorProps, SelectorCardProps, overlayprops };
+export type { SelectorProps, SelectorCardProps };
