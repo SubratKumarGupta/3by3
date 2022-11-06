@@ -1,27 +1,23 @@
 import Image from "next/image";
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  useDndMonitor,
-  useDraggable,
-} from "@dnd-kit/core";
+import { DragOverlay, useDraggable } from "@dnd-kit/core";
 import useAnimeDndStore from "../../../state";
-import { CSS, Transform } from "@dnd-kit/utilities";
+import { CSS } from "@dnd-kit/utilities";
 import {
-  Media,
   SearchAnimeQuery,
   useSearchAnimeQuery,
 } from "../../../generated/graphql";
-import debounce from "lodash.debounce";
 import graphqlRequestClient from "../../../clints/GQLRequestClient";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
-import { string } from "zod";
+import { ChangeEvent } from "react";
+import { SortableContext } from "@dnd-kit/sortable";
 import { animeSearchCache } from "../../../generated/searchAnimeCache";
 import { LoadingList } from "../../loadingList";
 import { NotFound } from "../../notFound";
-import errorMap from "zod/lib/locales/en";
+
+import { checkSelected } from "../../utils/checkSelected";
+
+import { AnimeSearchCard } from "./AnimeSearchCard";
+import { UnderOverlay } from "../../utils/UnderOverlay";
+import { SearchBarUi } from "../../utils/searchBar";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -39,21 +35,7 @@ const SelectorCard = ({
   titleRom,
   format,
 }: SelectorCardProps) => {
-  const checkSelected = (
-    activeId: overlayprops | null,
-    id: number | undefined
-  ) => {
-    if (activeId?.id === undefined || activeId?.id === null) return false;
-    if (id === undefined || id === null) return false;
-    if (activeId?.id !== id) return false;
-    return true;
-  };
-  const activeId = useAnimeDndStore(
-    (state) => state.overlayState
-    // (b) => {
-    //   return checkSelected(b, id);
-    // }
-  );
+  const activeId = useAnimeDndStore((state) => state.overlayState);
 
   const Id: overlayprops = {
     id,
@@ -73,77 +55,29 @@ const SelectorCard = ({
   return (
     <>
       {checkSelected(activeId, id) ? (
-        <div
+        <UnderOverlay
+          type={"AMIME"}
           style={style}
-          {...listeners}
-          {...attributes}
-          ref={setNodeRef}
-          id={`${JSON.stringify(Id)}`}
-          className="mx-auto flex  h-24 w-[30%] touch-manipulation items-center justify-center"
-        >
-          <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
-            <Image
-              src={`${
-                img
-                  ? img.replace("large", "small")
-                  : "https://www.freeiconspng.com/img/23486"
-              }`}
-              alt={`anime image of ${titleEng ? titleEng : titleRom}`}
-              layout={"fill"}
-            />
-          </div>
-        </div>
+          listeners={listeners}
+          attributes={attributes}
+          setNodeRef={setNodeRef}
+          Id={Id}
+        />
       ) : (
-        <div
+        <AnimeSearchCard
+          type={"AMIME"}
           style={style}
-          {...listeners}
-          {...attributes}
-          ref={setNodeRef}
-          id={`${JSON.stringify(Id)}`}
-          className="group relative mx-auto mb-3 flex h-24 w-[85%] touch-manipulation items-center justify-start rounded-r-xl border border-transparent bg-[#031631] text-[#ffffff] hover:border-blue-500"
-        >
-          <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
-            <Image
-              src={`${
-                img
-                  ? img.replace("large", "small")
-                  : "https://www.freeiconspng.com/img/23486"
-              }`}
-              alt={`anime image of ${titleEng ? titleEng : titleRom}`}
-              layout={"fill"}
-            />
-          </div>
-          <div className=" flex h-[100%]  flex-col justify-around align-top">
-            <div className=" absolute top-0 right-0 mt-1 mr-1 hidden h-4 w-4 touch-manipulation hover:bg-blue-700 group-hover:flex">
-              <a
-                target="_blank"
-                rel="noopener"
-                className="h-7 w-7"
-                onPointerDown={(e) => {
-                  e.stopPropagation();
-                  console.log("click a");
-                }}
-                href={`https://anilist.co/anime/${id}`}
-              >
-                <Image
-                  src={"/img/redirect.png"}
-                  alt={`redirict`}
-                  layout={"fill"}
-                />
-              </a>
-            </div>
-
-            {isAdult ? (
-              <div className=" absolute bottom-0 right-0 mb-2 mr-2 rounded-md bg-red-500 text-white">
-                18+
-              </div>
-            ) : null}
-            <div className=" relative mr-[6px] overflow-hidden text-sky-500 after:absolute after:right-0 after:bottom-0 after:inline-block after:content-[...] ">
-              {`${titleEng ? titleEng : titleRom}`}
-            </div>
-            <div className=" ">{format}</div>
-          </div>
-        </div>
+          listeners={listeners}
+          attributes={attributes}
+          setNodeRef={setNodeRef}
+          Id={Id}
+          img={img}
+          titleEng={titleEng}
+          titleRom={titleRom}
+          id={id}
+          isAdult={isAdult}
+          format={format}
+        />
       )}
     </>
   );
@@ -151,7 +85,6 @@ const SelectorCard = ({
 
 const SearchBar = () => {
   const setSearchKey = useAnimeDndStore((state) => state.setSearchkey);
-
   const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     let value = null;
     if (e.target.value !== "") {
@@ -159,46 +92,7 @@ const SearchBar = () => {
     }
     setSearchKey(value);
   };
-  const handelOnChange = useCallback(debounce(changeHandler, 600), []);
-  return (
-    <div className=" m-auto w-[90%]">
-      <form className=" w-[100%]">
-        <label
-          htmlFor="default-search"
-          className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-        >
-          Search
-        </label>
-        <div className="relative">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg
-              aria-hidden="true"
-              className="h-5 w-5 text-gray-500 dark:text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              ></path>
-            </svg>
-          </div>
-          <input
-            onChange={handelOnChange}
-            type="search"
-            id="default-search"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="Search anime"
-            required
-          />
-        </div>
-      </form>
-    </div>
-  );
+  return <SearchBarUi changeHandler={changeHandler} debouncetime={600} />;
 };
 
 type overlayprops = {
