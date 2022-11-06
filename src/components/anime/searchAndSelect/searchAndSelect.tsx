@@ -1,6 +1,5 @@
-import Image from "next/image";
-import { DragOverlay, useDraggable } from "@dnd-kit/core";
-import useAnimeDndStore, { boardItems } from "../../../state";
+import { useDraggable } from "@dnd-kit/core";
+import useAnimeDndStore from "../../../state";
 import { CSS } from "@dnd-kit/utilities";
 import {
   SearchAnimeQuery,
@@ -8,7 +7,6 @@ import {
 } from "../../../generated/graphql";
 import graphqlRequestClient from "../../../clints/GQLRequestClient";
 import { ChangeEvent, useMemo } from "react";
-import { SortableContext } from "@dnd-kit/sortable";
 import { animeSearchCache } from "../../../generated/searchAnimeCache";
 import { LoadingList } from "../../loadingList";
 import { NotFound } from "../../notFound";
@@ -20,7 +18,6 @@ import { UnderOverlay } from "../../utils/UnderOverlay";
 import { SearchBarUi } from "../../utils/searchBar";
 import { compare } from "../../utils/compareBoarditems";
 import { Overlay, overlayprops } from "../Overlay";
-import { create } from "lodash";
 import { createFilterCheckList } from "../../utils/createFilterCheckList";
 
 type SelectorCardProps = {
@@ -108,6 +105,7 @@ const ListAnime = () => {
     {search: searchKey },
     {
       staleTime: 1000 * 60 * 15,
+      // gettig a pre genrated respons for insial page load ,
       initialData: () => {
         if (searchKey === null) return animeSearchCache.data;
         return undefined;
@@ -118,24 +116,27 @@ const ListAnime = () => {
   if (isLoading)return (<div><LoadingList /></div>);
   /* prettier-ignore */
   if (error)return (<div className=" mr-auto ml-auto mt-8 flex h-96 w-[90%] flex-col items-center justify-center rounded-xl bg-[#031631] text-2xl text-sky-500">{`${error}`}</div>);
-  /* prettier-ignore */ //for no match found
+  /* prettier-ignore */ //for no related match found
   if (data?.Page?.media?.length === 0) return (<div><NotFound searchkey={searchKey} /></div>);
 
+  /*filtering so after transfering
+   card to board ,card should be removed from 
+   list and prevented from showing again*/
+
+  /**this func filters against a object of keys storing */
   const filteredMidia = (
     data: SearchAnimeQuery,
-    items: boardItems[],
-    createFilterCheckList: (items: boardItems[]) => {
+    filterlist: {
       [key: string]: string;
     }
   ) => {
     const media: SelectorCardProps[] = [];
     const temp = data?.Page?.media;
     console.log("ggff");
-    const filteredlist = createFilterCheckList(items); //create a diskinory of board items to check aganest
     for (let i = 0; i < temp!.length; i++) {
       const card = temp![i];
-      console.log("check", filteredlist);
-      if (filteredlist[card!.id] !== undefined) continue;
+      console.log("check", filterlist);
+      if (filterlist[card!.id] !== undefined) continue;
       const tempcard: SelectorCardProps = {
         id: card?.id,
         titleEng: card?.title?.english,
@@ -148,10 +149,7 @@ const ListAnime = () => {
     }
     return media;
   };
-  const media = useMemo(
-    () => filteredMidia(data, items, createFilterCheckList),
-    [data, items]
-  );
+  const media = filteredMidia(data, createFilterCheckList(items));
   return (
     <>
       <div className=" h-[100%] w-[100%] overflow-x-hidden pt-2 scrollbar-hide">
