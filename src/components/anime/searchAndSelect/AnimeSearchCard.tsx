@@ -29,7 +29,6 @@ export const AnimeSearchCard = ({
       >
         <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
           <Image
-            quality={40}
             src={`${
               img
                 ? img.replace("large", "small")
