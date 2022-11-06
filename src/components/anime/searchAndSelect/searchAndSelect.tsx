@@ -118,6 +118,7 @@ const Overlay = () => {
         <div className="touch-manipulation" id={`${activeId.id}`}>
           <div className=" relative aspect-[85/115] h-[100%]">
             <Image
+              quality={60}
               src={`${
                 activeId.img
                   ? activeId.img
