@@ -2,17 +2,15 @@ import { useDraggable } from "@dnd-kit/core";
 import useMangaDndStore from "../mangastate";
 import { CSS } from "@dnd-kit/utilities";
 import {
-  SearchAnimeQuery,
-  useSearchAnimeQuery,
+  SearchMangaQuery,
+  useSearchMangaQuery,
 } from "../../../generated/graphql";
 import graphqlRequestClient from "../../../clints/GQLRequestClient";
-import { ChangeEvent, useMemo } from "react";
-import { animeSearchCache } from "../../../generated/searchAnimeCache";
+import { ChangeEvent } from "react";
+import { mangaSearchCache } from "../../../generated/searchMangaCache";
 import { LoadingList } from "../../loadingList";
 import { NotFound } from "../../notFound";
-
 import { checkSelected } from "../../utils/checkSelected";
-
 import { MangaSearchCard } from "./MangaSearchCard";
 import { UnderOverlay } from "../../utils/UnderOverlay";
 import { SearchBarUi } from "../../utils/searchBarUi";
@@ -101,13 +99,13 @@ const ListManga = () => {
   const searchKey = useMangaDndStore((state) => state.searchKey);
 
   /* prettier-ignore */
-  const { data, isLoading, error } = useSearchAnimeQuery<SearchAnimeQuery,Error>( graphqlRequestClient,
+  const { data, isLoading, error } = useSearchMangaQuery<SearchMangaQuery,Error>( graphqlRequestClient,
     {search: searchKey },
     {
       staleTime: 1000 * 60 * 15,
       // gettig a pre genrated respons for insial page load ,
       initialData: () => {
-        if (searchKey === null) return animeSearchCache.data;
+        if (searchKey === null) return mangaSearchCache.data;
         return undefined;
       },
     }
@@ -125,7 +123,7 @@ const ListManga = () => {
 
   /**this func filters against a object of keys storing */
   const filteredMidia = (
-    data: SearchAnimeQuery,
+    data: SearchMangaQuery,
     filterlist: {
       [key: string]: string;
     }
