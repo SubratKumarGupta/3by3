@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { SearchCardProps } from "../../utils/typs";
 
-export interface AnimeSearchCardProps extends SearchCardProps {
+export interface MangaSearchCardProps extends SearchCardProps {
   img: string | null | undefined;
   titleEng: string | null | undefined;
   titleRom: string | null | undefined;
@@ -10,7 +10,7 @@ export interface AnimeSearchCardProps extends SearchCardProps {
   id: number | undefined;
   type: string;
 }
-export const AnimeSearchCard = ({
+export const MangaSearchCard = ({
   style,
   listeners,
   attributes,
@@ -23,7 +23,7 @@ export const AnimeSearchCard = ({
   type,
   isAdult,
   format,
-}: AnimeSearchCardProps) => {
+}: MangaSearchCardProps) => {
   return (
     <>
       <div

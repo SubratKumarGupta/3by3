@@ -57,9 +57,6 @@ const BoardCard = ({ name, id, img, format }: BoardCardProps) => {
   );
 };
 
-type T3TBoardProps = {
-  name: string;
-};
 type moveAcativeType = {
   format: string;
   id: number;
@@ -67,7 +64,7 @@ type moveAcativeType = {
   titleEng: string;
   titleRom: string;
 };
-const T3TBoard = ({}: T3TBoardProps) => {
+const MangaT3TBoard = () => {
   const items = useMangaDndStore((state) => state.boardItems);
   const setItems = useMangaDndStore((state) => state.setBoardItems);
   const setActiveId = useMangaDndStore((state) => state.setOverlayState);
@@ -138,5 +135,5 @@ const T3TBoard = ({}: T3TBoardProps) => {
   );
 };
 
-export { T3TBoard, BoardCard };
-export type { T3TBoardProps, BoardCardProps, moveAcativeType };
+export { MangaT3TBoard };
+export type { BoardCardProps, moveAcativeType };

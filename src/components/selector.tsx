@@ -4,10 +4,22 @@ import {
   AnimeSearchBar,
   ListAnime,
 } from "./anime/searchAndSelect/searchAndSelect";
+import { MangaOverlay } from "./manga/MangaOverlay";
+import {
+  MangaSearchBar,
+  ListManga,
+} from "./manga/searchAndSelect/searchAndSelect";
 
-type props = {
-  type: string;
+const Manga = () => {
+  return (
+    <>
+      <MangaSearchBar />
+      <ListManga />
+      <MangaOverlay />
+    </>
+  );
 };
+
 const Anime = () => {
   return (
     <>
@@ -17,15 +29,10 @@ const Anime = () => {
     </>
   );
 };
-const Manga = () => {
-  return (
-    <>
-      <AnimeSearchBar />
-      <ListAnime />
-      <AnimeOverlay />
-    </>
-  );
+type props = {
+  type: string;
 };
+
 export const Selector: React.FC<props> = ({ type }: props) => {
   let Content = Anime;
   if (type === "ANIME") Content = Anime;
