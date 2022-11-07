@@ -1,4 +1,4 @@
-import { boardItems } from "../../state";
+import { boardItems } from "./typs";
 
 export const swapItemsInAnIndex = (
   items: boardItems[],

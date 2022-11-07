@@ -1,12 +1,6 @@
 import create from "zustand";
-import { overlayprops } from "./components/anime/Overlay";
+import { boardItems, overlayprops } from "../utils/typs";
 
-type boardItems = {
-  id: string;
-  img: string | null;
-  name: string | null;
-  format: string | null;
-};
 const useAnimeDndStore = create<{
   boardItems: boardItems[];
   setBoardItems: (newBoardItems: boardItems[]) => void;

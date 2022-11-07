@@ -8,10 +8,11 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { number } from "zod";
-import useAnimeDndStore, { boardItems } from "../animestate";
 import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 import { swapItemsInAnIndex } from "../../utils/swapItemsInAnIndex";
 import { updateIndex } from "../../utils/updateIndex";
+import { boardItems } from "../../utils/typs";
+import useMangaDndStore from "../mangastate";
 
 type BoardCardProps = {
   id: string;
@@ -66,10 +67,10 @@ type moveAcativeType = {
   titleEng: string;
   titleRom: string;
 };
-const T3TBoard = ({ name }: T3TBoardProps) => {
-  const items = useAnimeDndStore((state) => state.boardItems);
-  const setItems = useAnimeDndStore((state) => state.setBoardItems);
-  const setActiveId = useAnimeDndStore((state) => state.setOverlayState);
+const T3TBoard = ({}: T3TBoardProps) => {
+  const items = useMangaDndStore((state) => state.boardItems);
+  const setItems = useMangaDndStore((state) => state.setBoardItems);
+  const setActiveId = useMangaDndStore((state) => state.setOverlayState);
   useDndMonitor({
     onDragStart(event: any) {
       /**check if new item is from selector or just a rearrangment */

@@ -1,5 +1,5 @@
-import { boardItems } from "../../state";
 import { moveAcativeType } from "../anime/3x3/3x3";
+import { boardItems } from "./typs";
 
 export const updateIndex = (
   moveAcative: moveAcativeType,

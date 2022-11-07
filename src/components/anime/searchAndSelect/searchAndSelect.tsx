@@ -1,5 +1,5 @@
 import { useDraggable } from "@dnd-kit/core";
-import useAnimeDndStore from "../../../state";
+import useAnimeDndStore from "../animestate";
 import { CSS } from "@dnd-kit/utilities";
 import {
   SearchAnimeQuery,
@@ -15,10 +15,10 @@ import { checkSelected } from "../../utils/checkSelected";
 
 import { AnimeSearchCard } from "./AnimeSearchCard";
 import { UnderOverlay } from "../../utils/UnderOverlay";
-import { SearchBarUi } from "../../utils/searchBar";
+import { SearchBarUi } from "../../utils/searchBarUi";
 import { compare } from "../../utils/compareBoarditems";
-import { Overlay, overlayprops } from "../Overlay";
 import { createFilterCheckList } from "../../utils/createFilterCheckList";
+import { overlayprops } from "../../utils/typs";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -28,7 +28,7 @@ type SelectorCardProps = {
   img: string | null | undefined;
   format: string | null | undefined;
 };
-const SelectorCard = ({
+const AnimeSelectorCard = ({
   id,
   titleEng,
   img,
@@ -84,7 +84,7 @@ const SelectorCard = ({
   );
 };
 
-const SearchBar = () => {
+const AnimeSearchBar = () => {
   const setSearchKey = useAnimeDndStore((state) => state.setSearchkey);
   const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     let value = null;
@@ -155,7 +155,7 @@ const ListAnime = () => {
       <div className=" h-[100%] w-[100%] overflow-x-hidden pt-2 scrollbar-hide">
         {media.map((media: SelectorCardProps, i: number) => {
           return (
-            <SelectorCard
+            <AnimeSelectorCard
               key={i}
               id={media.id}
               titleEng={media.titleEng}
@@ -166,23 +166,9 @@ const ListAnime = () => {
             />
           );
         })}
-        <Overlay />
       </div>
     </>
   );
 };
 
-type SelectorProps = {
-  name: string;
-};
-const Selector = ({ name }: SelectorProps) => {
-  return (
-    <div className="row-span-2 grid h-[100vh] w-[100%] grid-flow-row grid-cols-1 grid-rows-[12%] items-start justify-center bg-[#000a18]">
-      <SearchBar />
-      <ListAnime />
-    </div>
-  );
-};
-
-export { Selector, SearchBar, ListAnime, SelectorCard };
-export type { SelectorProps, SelectorCardProps };
+export { AnimeSearchBar, ListAnime };

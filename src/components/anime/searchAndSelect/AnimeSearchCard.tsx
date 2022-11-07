@@ -1,7 +1,7 @@
 import { DraggableAttributes } from "@dnd-kit/core";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import Image from "next/image";
-import { overlayprops } from "../Overlay";
+import { overlayprops } from "../../utils/typs";
 
 export const AnimeSearchCard = ({
   style,

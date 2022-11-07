@@ -1,4 +1,4 @@
-import { boardItems } from "../../state";
+import { boardItems } from "./typs";
 
 export const compare = (a: boardItems[], b: boardItems[]) => {
   for (let i = 0; i < b.length; i++) {

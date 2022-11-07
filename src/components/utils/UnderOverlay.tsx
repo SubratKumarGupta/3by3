@@ -1,6 +1,6 @@
 import { DraggableAttributes } from "@dnd-kit/core";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import { overlayprops } from "../anime/Overlay";
+import { overlayprops } from "./typs";
 
 export type UnderOverlayProps = {
   style: {

@@ -1,4 +1,4 @@
-import { boardItems } from "../../state";
+import { boardItems } from "./typs";
 
 export const createFilterCheckList = (items: boardItems[]) => {
   const filteredlist: { [key: string]: string } = items.reduce(function (

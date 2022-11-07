@@ -1,16 +1,11 @@
 import { DragOverlay } from "@dnd-kit/core";
-import useAnimeDndStore from "../../state";
-import Image from "next/image";
 
-export type overlayprops = {
-  id: number | undefined;
-  titleEng: string | null | undefined;
-  titleRom: string | null | undefined;
-  img: string | null | undefined;
-  format: string | null | undefined;
+import Image from "next/image";
+import { overlayprops } from "./typs";
+type props = {
+  activeId: overlayprops | null;
 };
-export const Overlay = () => {
-  const activeId = useAnimeDndStore((state) => state.overlayState);
+export const OverlayUi: React.FC<props> = ({ activeId }: props) => {
   console.log(activeId);
   const isNUM = (str: string) => {
     const parsed = parseInt(str, 10);
@@ -34,8 +29,6 @@ export const Overlay = () => {
                 activeId.titleEng ? activeId.titleEng : activeId.titleRom
               }`}
               layout={"fill"}
-              // height={96}
-              // width={70.948}
             />
           </div>
         </div>

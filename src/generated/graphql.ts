@@ -4614,6 +4614,23 @@ export type SearchMangaQuery = {
       id: number;
       format?: MediaFormat | null;
       isAdult?: boolean | null;
+      staffPreview?: {
+        __typename?: "StaffConnection";
+        edges?: Array<{
+          __typename?: "StaffEdge";
+          id?: number | null;
+          role?: string | null;
+          node?: {
+            __typename?: "Staff";
+            id: number;
+            name?: {
+              __typename?: "StaffName";
+              full?: string | null;
+              native?: string | null;
+            } | null;
+          } | null;
+        } | null> | null;
+      } | null;
       coverImage?: {
         __typename?: "MediaCoverImage";
         extraLarge?: string | null;
@@ -4686,6 +4703,19 @@ export const SearchMangaDocument = `
     }
     media(id: $id, type: MANGA, sort: POPULARITY_DESC, search: $search) {
       id
+      staffPreview: staff(perPage: 8, sort: [RELEVANCE, ID]) {
+        edges {
+          id
+          role
+          node {
+            id
+            name {
+              full
+              native
+            }
+          }
+        }
+      }
       coverImage {
         extraLarge
         large

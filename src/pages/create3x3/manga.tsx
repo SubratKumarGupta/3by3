@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { DndElements } from "../../components/Dnd";
 
-const Home: NextPage = () => {
+const createManga3x3: NextPage = () => {
   return (
     <>
       <Head>
@@ -20,10 +20,10 @@ const Home: NextPage = () => {
         bg-dark-gradint-1
        "
       >
-        <DndElements type={"ANIME"} />
+        <DndElements type="MANGA" />
       </main>
     </>
   );
 };
 
-export default Home;
+export default createManga3x3;
