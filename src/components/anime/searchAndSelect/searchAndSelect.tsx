@@ -6,7 +6,7 @@ import {
   useSearchAnimeQuery,
 } from "../../../generated/graphql";
 import graphqlRequestClient from "../../../clints/GQLRequestClient";
-import { ChangeEvent, useMemo } from "react";
+import { ChangeEvent } from "react";
 import { animeSearchCache } from "../../../generated/searchAnimeCache";
 import { LoadingList } from "../../loadingList";
 import { NotFound } from "../../notFound";
