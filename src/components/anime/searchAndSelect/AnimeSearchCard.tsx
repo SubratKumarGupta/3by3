@@ -20,7 +20,6 @@ export const AnimeSearchCard = ({
   titleEng,
   titleRom,
   id,
-  type,
   isAdult,
   format,
 }: AnimeSearchCardProps) => {
@@ -32,7 +31,7 @@ export const AnimeSearchCard = ({
         {...attributes}
         ref={setNodeRef}
         id={`${JSON.stringify(Id)}`}
-        className="group relative mx-auto mb-3 flex h-24 w-[85%] touch-manipulation items-center justify-start rounded-r-xl border border-transparent bg-[#031631] text-[#ffffff] hover:border-blue-500"
+        className="group relative mx-auto mb-3 flex h-24 w-[85%] touch-manipulation items-center justify-start  rounded-r-xl border border-transparent bg-[#031631] text-[#ffffff] hover:border-blue-500"
       >
         <div className=" relative mr-3 aspect-[85/115] h-[100%] touch-manipulation">
           <Image
@@ -45,7 +44,7 @@ export const AnimeSearchCard = ({
             layout={"fill"}
           />
         </div>
-        <div className=" flex h-[100%]  flex-col justify-around align-top">
+        <div className=" flex h-[100%] w-full  flex-col justify-around overflow-hidden  align-top">
           <div className=" absolute top-0 right-0 mt-1 mr-1 hidden h-4 w-4 touch-manipulation hover:bg-blue-700 group-hover:flex">
             <a
               target="_blank"
@@ -69,7 +68,7 @@ export const AnimeSearchCard = ({
               18+
             </div>
           ) : null}
-          <div className=" relative mr-[6px] overflow-hidden text-sky-500 after:absolute after:right-0 after:bottom-0 after:inline-block after:content-[...] ">
+          <div className="relative mr-[6px] w-[97%] overflow-hidden text-ellipsis text-sky-500 after:absolute after:right-0 after:bottom-0 after:inline-block after:content-[...] ">
             {`${titleEng ? titleEng : titleRom}`}
           </div>
           <div className=" ">{format}</div>

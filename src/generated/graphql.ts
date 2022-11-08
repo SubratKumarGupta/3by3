@@ -4703,7 +4703,7 @@ export const SearchMangaDocument = `
     }
     media(id: $id, type: MANGA, sort: POPULARITY_DESC, search: $search) {
       id
-      staffPreview: staff(perPage: 8, sort: [RELEVANCE, ID]) {
+      staffPreview: staff(perPage: 2, sort: [RELEVANCE, ID]) {
         edges {
           id
           role

@@ -1,5 +1,3 @@
-import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools/build/lib/devtools";
-
 const LoadindCard = () => {
   //h-[100%] w-2 animate-pulse overflow-hidden  bg-neutral-800 bg-neutral-600 p-3 shadow before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 hover:shadow-lg
   return (

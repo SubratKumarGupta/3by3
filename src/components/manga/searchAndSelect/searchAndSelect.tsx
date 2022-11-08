@@ -11,21 +11,17 @@ import { mangaSearchCache } from "../../../generated/searchMangaCache";
 import { LoadingList } from "../../loadingList";
 import { NotFound } from "../../notFound";
 import { checkSelected } from "../../utils/checkSelected";
-import { MangaSearchCard } from "./MangaSearchCard";
+import {
+  MangaSearchCard,
+  MangaSearchCardProps,
+  roleAndName,
+} from "./MangaSearchCard";
 import { UnderOverlay } from "../../utils/UnderOverlay";
 import { SearchBarUi } from "../../utils/searchBarUi";
 import { compare } from "../../utils/compareBoarditems";
 import { createFilterCheckList } from "../../utils/createFilterCheckList";
 import { overlayprops } from "../../utils/typs";
 
-type SelectorCardProps = {
-  id: number | undefined;
-  titleEng: string | null | undefined;
-  titleRom: string | null | undefined;
-  isAdult: boolean | null | undefined;
-  img: string | null | undefined;
-  format: string | null | undefined;
-};
 const MangaSelectorCard = ({
   id,
   titleEng,
@@ -33,7 +29,8 @@ const MangaSelectorCard = ({
   isAdult,
   titleRom,
   format,
-}: SelectorCardProps) => {
+  staff,
+}: MangaSearchCardProps) => {
   const activeId = useMangaDndStore((state) => state.overlayState);
 
   const Id: overlayprops = {
@@ -64,7 +61,6 @@ const MangaSelectorCard = ({
         />
       ) : (
         <MangaSearchCard
-          type={"AMIME"}
           style={style}
           listeners={listeners}
           attributes={attributes}
@@ -76,6 +72,7 @@ const MangaSelectorCard = ({
           id={id}
           isAdult={isAdult}
           format={format}
+          staff={staff}
         />
       )}
     </>
@@ -120,28 +117,54 @@ const ListManga = () => {
   /*filtering so after transfering
    card to board ,card should be removed from 
    list and prevented from showing again*/
-
   /**this func filters against a object of keys storing */
+
   const filteredMidia = (
     data: SearchMangaQuery,
     filterlist: {
       [key: string]: string;
     }
   ) => {
-    const media: SelectorCardProps[] = [];
+    const media: MangaSearchCardProps[] = [];
     const temp = data?.Page?.media;
     console.log("ggff");
+
     for (let i = 0; i < temp!.length; i++) {
       const card = temp![i];
       console.log("check", filterlist);
+
+      const staff: roleAndName[] = (() => {
+        const tempStaff: roleAndName[] = [];
+        if (card?.staffPreview?.edges?.length === undefined) return tempStaff;
+        for (let i = 0; i < card?.staffPreview?.edges?.length; i++) {
+          const edge = card?.staffPreview?.edges[i];
+
+          if (edge?.role === "Story & Art") {
+            tempStaff.pop();
+            tempStaff.push({
+              role: edge.role,
+              name: edge.node?.name?.full ?? "Not Found",
+            });
+            break;
+          } else {
+            tempStaff.push({
+              role: edge?.role ?? "",
+              name: edge?.node?.name?.full ?? "",
+            });
+          }
+        }
+        return tempStaff;
+      })();
       if (filterlist[card!.id] !== undefined) continue;
-      const tempcard: SelectorCardProps = {
+      // {art,}
+      const tempcard: MangaSearchCardProps = {
         id: card?.id,
         titleEng: card?.title?.english,
         titleRom: card?.title?.romaji,
         isAdult: card?.isAdult,
         img: card?.coverImage?.extraLarge,
         format: card?.format,
+        staff: staff,
       };
       media.push(tempcard);
     }
@@ -151,7 +174,7 @@ const ListManga = () => {
   return (
     <>
       <div className=" h-[100%] w-[100%] overflow-x-hidden pt-2 scrollbar-hide">
-        {media.map((media: SelectorCardProps, i: number) => {
+        {media.map((media: MangaSearchCardProps, i: number) => {
           return (
             <MangaSelectorCard
               key={i}
@@ -161,6 +184,7 @@ const ListManga = () => {
               isAdult={media.isAdult}
               img={media.img}
               format={media.format}
+              staff={media.staff} // staff={[{role:"Story & Art",name:"subrat"}]}
             />
           );
         })}

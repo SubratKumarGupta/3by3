@@ -7,7 +7,10 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "genGQL": "graphql-codegen --config codegen.yml"
+    "genGQL": "graphql-codegen --config codegen.yml",
+    "analyze": "cross-env ANALYZE=true next build",
+    "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
+    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.0.5",

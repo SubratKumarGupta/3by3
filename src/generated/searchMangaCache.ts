@@ -274,50 +274,6 @@ export const mangaSearchCache: any = {
           },
         },
         {
-          id: 101517,
-          staffPreview: {
-            edges: [
-              {
-                id: 107930,
-                role: "Story & Art",
-                node: {
-                  id: 125415,
-                  name: {
-                    full: "Gege Akutami",
-                    native: "芥見下々",
-                  },
-                },
-              },
-              {
-                id: 535932,
-                role: "Assistant",
-                node: {
-                  id: 130104,
-                  name: {
-                    full: "Mizuki Yoda",
-                    native: "依田瑞稀",
-                  },
-                },
-              },
-            ],
-          },
-          coverImage: {
-            extraLarge:
-              "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx101517-H3TdM3g5ZUe9.jpg",
-            large:
-              "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx101517-H3TdM3g5ZUe9.jpg",
-            medium:
-              "https://s4.anilist.co/file/anilistcdn/media/manga/cover/small/bx101517-H3TdM3g5ZUe9.jpg",
-            color: "#e4a15d",
-          },
-          format: "MANGA",
-          isAdult: false,
-          title: {
-            romaji: "Jujutsu Kaisen",
-            english: "Jujutsu Kaisen",
-          },
-        },
-        {
           id: 85486,
           staffPreview: {
             edges: [
@@ -359,6 +315,50 @@ export const mangaSearchCache: any = {
           title: {
             romaji: "Boku no Hero Academia",
             english: "My Hero Academia",
+          },
+        },
+        {
+          id: 101517,
+          staffPreview: {
+            edges: [
+              {
+                id: 107930,
+                role: "Story & Art",
+                node: {
+                  id: 125415,
+                  name: {
+                    full: "Gege Akutami",
+                    native: "芥見下々",
+                  },
+                },
+              },
+              {
+                id: 535932,
+                role: "Assistant",
+                node: {
+                  id: 130104,
+                  name: {
+                    full: "Mizuki Yoda",
+                    native: "依田瑞稀",
+                  },
+                },
+              },
+            ],
+          },
+          coverImage: {
+            extraLarge:
+              "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx101517-H3TdM3g5ZUe9.jpg",
+            large:
+              "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx101517-H3TdM3g5ZUe9.jpg",
+            medium:
+              "https://s4.anilist.co/file/anilistcdn/media/manga/cover/small/bx101517-H3TdM3g5ZUe9.jpg",
+            color: "#e4a15d",
+          },
+          format: "MANGA",
+          isAdult: false,
+          title: {
+            romaji: "Jujutsu Kaisen",
+            english: "Jujutsu Kaisen",
           },
         },
         {
