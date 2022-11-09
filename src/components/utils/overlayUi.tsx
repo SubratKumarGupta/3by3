@@ -4,9 +4,10 @@ import Image from "next/image";
 import { overlayprops } from "./typs";
 type props = {
   activeId: overlayprops | null;
+  imgSize: string;
 };
-export const OverlayUi: React.FC<props> = ({ activeId }: props) => {
-  console.log(activeId);
+export const OverlayUi: React.FC<props> = ({ activeId, imgSize }: props) => {
+  console.log("jjd", activeId?.img);
   const isNUM = (str: string) => {
     const parsed = parseInt(str, 10);
     if (parsed === undefined) return false;
@@ -22,7 +23,7 @@ export const OverlayUi: React.FC<props> = ({ activeId }: props) => {
             <Image
               src={`${
                 activeId.img
-                  ? activeId.img.replace("large", "small")
+                  ? activeId.img.replace("large", imgSize)
                   : "https://www.freeiconspng.com/img/23486"
               }`}
               alt={`anime image of ${

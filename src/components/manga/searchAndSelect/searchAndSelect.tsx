@@ -88,7 +88,13 @@ const MangaSearchBar = () => {
     }
     setSearchKey(value);
   };
-  return <SearchBarUi changeHandler={changeHandler} debouncetime={600} />;
+  return (
+    <SearchBarUi
+      placeholder="Search manga"
+      changeHandler={changeHandler}
+      debouncetime={600}
+    />
+  );
 };
 
 const ListManga = () => {

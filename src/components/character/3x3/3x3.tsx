@@ -7,10 +7,10 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+import useCharacterDndStore, { boardItems } from "../characterstate";
+
 import { swapItemsInAnIndex } from "../../utils/swapItemsInAnIndex";
 import { updateIndex } from "../../utils/updateIndex";
-import { boardItems } from "../../utils/typs";
-import useMangaDndStore from "../mangastate";
 
 type BoardCardProps = {
   id: string;
@@ -62,12 +62,13 @@ type moveAcativeType = {
   titleEng: string;
   titleRom: string;
 };
-const MangaT3TBoard = () => {
-  const items = useMangaDndStore((state) => state.boardItems);
-  const setItems = useMangaDndStore((state) => state.setBoardItems);
-  const setActiveId = useMangaDndStore((state) => state.setOverlayState);
+const CharacterT3TBoard = () => {
+  const items = useCharacterDndStore((state) => state.boardItems);
+  const setItems = useCharacterDndStore((state) => state.setBoardItems);
+  const setActiveId = useCharacterDndStore((state) => state.setOverlayState);
   useDndMonitor({
     onDragStart(event: any) {
+      console.log("jjos", event.active.id);
       /**check if new item is from selector or just a rearrangment */
       if (event.active.data.current?.sortable?.containerId === "B") {
         /*for rearramgment*/
@@ -78,6 +79,7 @@ const MangaT3TBoard = () => {
       }
     },
     onDragEnd(event) {
+      console.log("jjoe", event.active.id);
       setActiveId(null);
 
       const { active, over } = event;
@@ -133,5 +135,5 @@ const MangaT3TBoard = () => {
   );
 };
 
-export { MangaT3TBoard };
+export { CharacterT3TBoard };
 export type { BoardCardProps, moveAcativeType };

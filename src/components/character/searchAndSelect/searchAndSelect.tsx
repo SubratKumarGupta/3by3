@@ -1,19 +1,19 @@
 import { useDraggable } from "@dnd-kit/core";
-import useAnimeDndStore from "../animestate";
+import useCharacterDndStore from "../characterstate";
 import { CSS } from "@dnd-kit/utilities";
 import {
-  SearchAnimeQuery,
-  useSearchAnimeQuery,
+  SearchCharacterQuery,
+  useSearchCharacterQuery,
 } from "../../../generated/graphql";
 import graphqlRequestClient from "../../../clints/GQLRequestClient";
 import { ChangeEvent } from "react";
-import { animeSearchCache } from "../../../generated/searchAnimeCache";
+import { CharacterSearchCache } from "../../../generated/searchCharacterCache";
 import { LoadingList } from "../../loadingList";
 import { NotFound } from "../../notFound";
 
 import { checkSelected } from "../../utils/checkSelected";
 
-import { AnimeSearchCard } from "./AnimeSearchCard";
+import { CharacterSearchCard } from "./CharacterSearchCard";
 import { UnderOverlay } from "../../utils/UnderOverlay";
 import { SearchBarUi } from "../../utils/searchBarUi";
 import { compare } from "../../utils/compareBoarditems";
@@ -24,19 +24,19 @@ type SelectorCardProps = {
   id: number | undefined;
   titleEng: string | null | undefined;
   titleRom: string | null | undefined;
-  isAdult: boolean | null | undefined;
   img: string | null | undefined;
+  name: string;
   format: string | null | undefined;
 };
-const AnimeSelectorCard = ({
+const CharacterSelectorCard = ({
   id,
   titleEng,
   img,
-  isAdult,
+  name,
   titleRom,
   format,
 }: SelectorCardProps) => {
-  const activeId = useAnimeDndStore((state) => state.overlayState);
+  const activeId = useCharacterDndStore((state) => state.overlayState);
 
   const Id: overlayprops = {
     id,
@@ -65,7 +65,7 @@ const AnimeSelectorCard = ({
           Id={Id}
         />
       ) : (
-        <AnimeSearchCard
+        <CharacterSearchCard
           type={"AMIME"}
           style={style}
           listeners={listeners}
@@ -76,16 +76,15 @@ const AnimeSelectorCard = ({
           titleEng={titleEng}
           titleRom={titleRom}
           id={id}
-          isAdult={isAdult}
-          format={format}
+          name={name}
         />
       )}
     </>
   );
 };
 
-const AnimeSearchBar = () => {
-  const setSearchKey = useAnimeDndStore((state) => state.setSearchkey);
+const CharacterSearchBar = () => {
+  const setSearchKey = useCharacterDndStore((state) => state.setSearchkey);
   const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     let value = null;
     if (e.target.value !== "") {
@@ -95,25 +94,25 @@ const AnimeSearchBar = () => {
   };
   return (
     <SearchBarUi
-      placeholder="Search anime"
+      placeholder="Search character"
       changeHandler={changeHandler}
       debouncetime={600}
     />
   );
 };
 
-const ListAnime = () => {
-  const items = useAnimeDndStore((state) => state.boardItems, compare);
-  const searchKey = useAnimeDndStore((state) => state.searchKey);
+const ListCharacter = () => {
+  const items = useCharacterDndStore((state) => state.boardItems, compare);
+  const searchKey = useCharacterDndStore((state) => state.searchKey);
 
   /* prettier-ignore */
-  const { data, isLoading, error } = useSearchAnimeQuery<SearchAnimeQuery,Error>( graphqlRequestClient,
+  const { data, isLoading, error } = useSearchCharacterQuery<SearchCharacterQuery,Error>( graphqlRequestClient,
     {search: searchKey },
     {
       staleTime: 1000 * 60 * 15,
       // gettig a pre genrated respons for insial page load ,
       initialData: () => {
-        if (searchKey === null) return animeSearchCache.data;
+        if (searchKey === null) return CharacterSearchCache.data;
         return undefined;
       },
     }
@@ -123,7 +122,7 @@ const ListAnime = () => {
   /* prettier-ignore */
   if (error)return (<div className=" mr-auto ml-auto mt-8 flex h-96 w-[90%] flex-col items-center justify-center rounded-xl bg-[#031631] text-2xl text-sky-500">{`${error}`}</div>);
   /* prettier-ignore */ //for no related match found
-  if (data?.Page?.media?.length === 0) return (<div><NotFound searchkey={searchKey} /></div>);
+  if (data?.Page?.characters?.length === 0) return (<div><NotFound searchkey={searchKey} /></div>);
 
   /*filtering so after transfering
    card to board ,card should be removed from 
@@ -131,25 +130,31 @@ const ListAnime = () => {
 
   /**this func filters against a object of keys storing */
   const filteredMidia = (
-    data: SearchAnimeQuery,
+    data: SearchCharacterQuery,
     filterlist: {
       [key: string]: string;
     }
   ) => {
     const media: SelectorCardProps[] = [];
-    const temp = data?.Page?.media;
+    const temp = data?.Page?.characters;
     console.log("ggff");
     for (let i = 0; i < temp!.length; i++) {
       const card = temp![i];
       console.log("check", filterlist);
       if (filterlist[card!.id] !== undefined) continue;
+      const name: string = (() => {
+        const tempName = "not fond";
+        if (card?.name?.full === undefined) return tempName;
+        if (card?.name?.full === null) return tempName;
+        return card.name.full;
+      })();
       const tempcard: SelectorCardProps = {
         id: card?.id,
-        titleEng: card?.title?.english,
-        titleRom: card?.title?.romaji,
-        isAdult: card?.isAdult,
-        img: card?.coverImage?.extraLarge,
-        format: card?.format,
+        titleEng: card?.media?.nodes?.at(0)?.title?.english,
+        titleRom: card?.media?.nodes?.at(0)?.title?.romaji,
+        name: name,
+        img: card?.image?.large,
+        format: "CHARACTER",
       };
       media.push(tempcard);
     }
@@ -161,14 +166,14 @@ const ListAnime = () => {
       <div className=" h-[100%] w-[100%] overflow-x-hidden pt-2 scrollbar-hide">
         {media.map((media: SelectorCardProps, i: number) => {
           return (
-            <AnimeSelectorCard
+            <CharacterSelectorCard
               key={i}
               id={media.id}
               titleEng={media.titleEng}
               titleRom={media.titleRom}
-              isAdult={media.isAdult}
               img={media.img}
               format={media.format}
+              name={media.name}
             />
           );
         })}
@@ -177,4 +182,4 @@ const ListAnime = () => {
   );
 };
 
-export { AnimeSearchBar, ListAnime };
+export { CharacterSearchBar, ListCharacter };

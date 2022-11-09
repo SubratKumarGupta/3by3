@@ -3,11 +3,14 @@ import { ChangeEvent, useCallback } from "react";
 type SearchBarUiprops = {
   changeHandler: (e: ChangeEvent<HTMLInputElement>) => void;
   debouncetime: number;
+  placeholder: string;
 };
 export const SearchBarUi = ({
   changeHandler,
   debouncetime,
+  placeholder,
 }: SearchBarUiprops) => {
+  console.log(placeholder, "pls");
   const handelOnChange = useCallback(debounce(changeHandler, debouncetime), []);
   return (
     <div className=" m-auto w-[90%]">
@@ -41,7 +44,7 @@ export const SearchBarUi = ({
             type="search"
             id="default-search"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="Search anime"
+            placeholder={placeholder}
             required
           />
         </div>

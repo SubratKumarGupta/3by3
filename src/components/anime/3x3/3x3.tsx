@@ -1,15 +1,14 @@
-import { useDroppable, useDndMonitor } from "@dnd-kit/core";
+import { useDndMonitor } from "@dnd-kit/core";
 import Image from "next/image";
 import {
-  arrayMove,
   useSortable,
   SortableContext,
   rectSwappingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { number } from "zod";
+
 import useAnimeDndStore, { boardItems } from "../animestate";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
+
 import { swapItemsInAnIndex } from "../../utils/swapItemsInAnIndex";
 import { updateIndex } from "../../utils/updateIndex";
 

@@ -1,29 +1,26 @@
 import Image from "next/image";
 import { SearchCardProps } from "../../utils/typs";
 
-export interface AnimeSearchCardProps extends SearchCardProps {
+export interface CharacterSearchCardProps extends SearchCardProps {
   img: string | null | undefined;
+  name: string;
   titleEng: string | null | undefined;
   titleRom: string | null | undefined;
-  isAdult: boolean | null | undefined;
-  format: string | null | undefined;
   id: number | undefined;
   type: string;
 }
-export const AnimeSearchCard = ({
+export const CharacterSearchCard = ({
   style,
   listeners,
   attributes,
   setNodeRef,
   Id,
   img,
+  name,
   titleEng,
   titleRom,
   id,
-  isAdult,
-  format,
-}: AnimeSearchCardProps) => {
-  console.log("img", img);
+}: CharacterSearchCardProps) => {
   return (
     <>
       <div
@@ -38,10 +35,10 @@ export const AnimeSearchCard = ({
           <Image
             src={`${
               img
-                ? img.replace("large", "small")
+                ? img.replace("large", "medium")
                 : "https://www.freeiconspng.com/img/23486"
             }`}
-            alt={`anime image of ${titleEng ? titleEng : titleRom}`}
+            alt={`image of ${titleEng ? titleEng : titleRom}`}
             layout={"fill"}
           />
         </div>
@@ -55,7 +52,7 @@ export const AnimeSearchCard = ({
                 e.stopPropagation();
                 console.log("click a");
               }}
-              href={`https://anilist.co/anime/${id}`}
+              href={`https://anilist.co/character/${id}`}
             >
               <Image
                 src={"/img/redirect.png"}
@@ -64,15 +61,17 @@ export const AnimeSearchCard = ({
               />
             </a>
           </div>
-          {isAdult ? (
-            <div className=" absolute bottom-0 right-0 mb-2 mr-2 rounded-md bg-red-500 text-white">
-              18+
-            </div>
-          ) : null}
           <div className="relative mr-[6px] w-[97%] overflow-hidden text-ellipsis text-sky-500 after:absolute after:right-0 after:bottom-0 after:inline-block after:content-[...] ">
-            {`${titleEng ? titleEng : titleRom}`}
+            {name}
           </div>
-          <div className=" ">{format}</div>
+          <div className="text-sm">
+            <span className="text-gray-500">
+              From-{" "}
+              <div className="text-cyan-600">{`${
+                titleEng ? titleEng : titleRom
+              }`}</div>
+            </span>
+          </div>
         </div>
       </div>
     </>

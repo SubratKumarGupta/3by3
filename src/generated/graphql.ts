@@ -4590,6 +4590,40 @@ export type SearchAnimeQuery = {
   } | null;
 };
 
+export type SearchCharacterQueryVariables = Exact<{
+  search?: InputMaybe<Scalars["String"]>;
+}>;
+
+export type SearchCharacterQuery = {
+  __typename?: "Query";
+  Page?: {
+    __typename?: "Page";
+    characters?: Array<{
+      __typename?: "Character";
+      id: number;
+      age?: string | null;
+      name?: { __typename?: "CharacterName"; full?: string | null } | null;
+      image?: {
+        __typename?: "CharacterImage";
+        large?: string | null;
+        medium?: string | null;
+      } | null;
+      media?: {
+        __typename?: "MediaConnection";
+        nodes?: Array<{
+          __typename?: "Media";
+          id: number;
+          title?: {
+            __typename?: "MediaTitle";
+            romaji?: string | null;
+            english?: string | null;
+          } | null;
+        } | null> | null;
+      } | null;
+    } | null> | null;
+  } | null;
+};
+
 export type SearchMangaQueryVariables = Exact<{
   id?: InputMaybe<Scalars["Int"]>;
   page?: InputMaybe<Scalars["Int"]>;
@@ -4686,6 +4720,53 @@ export const useSearchAnimeQuery = <TData = SearchAnimeQuery, TError = unknown>(
     fetcher<SearchAnimeQuery, SearchAnimeQueryVariables>(
       client,
       SearchAnimeDocument,
+      variables,
+      headers
+    ),
+    options
+  );
+export const SearchCharacterDocument = `
+    query searchCharacter($search: String) {
+  Page(perPage: 50) {
+    characters(search: $search) {
+      id
+      name {
+        full
+      }
+      image {
+        large
+        medium
+      }
+      age
+      media(sort: POPULARITY_DESC, onList: true, perPage: 1) {
+        nodes {
+          id
+          title {
+            romaji
+            english
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const useSearchCharacterQuery = <
+  TData = SearchCharacterQuery,
+  TError = unknown
+>(
+  client: GraphQLClient,
+  variables?: SearchCharacterQueryVariables,
+  options?: UseQueryOptions<SearchCharacterQuery, TError, TData>,
+  headers?: RequestInit["headers"]
+) =>
+  useQuery<SearchCharacterQuery, TError, TData>(
+    variables === undefined
+      ? ["searchCharacter"]
+      : ["searchCharacter", variables],
+    fetcher<SearchCharacterQuery, SearchCharacterQueryVariables>(
+      client,
+      SearchCharacterDocument,
       variables,
       headers
     ),
