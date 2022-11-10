@@ -7,10 +7,11 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import useAnimeDndStore, { boardItems } from "../animestate";
+import useAnimeDndStore from "../animestate";
 
 import { swapItemsInAnIndex } from "../../utils/swapItemsInAnIndex";
 import { updateIndex } from "../../utils/updateIndex";
+import { boardItems } from "../../utils/typs";
 
 type BoardCardProps = {
   id: string;

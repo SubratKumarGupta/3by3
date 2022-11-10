@@ -5,7 +5,7 @@ import {
   SearchCharacterQuery,
   useSearchCharacterQuery,
 } from "../../../generated/graphql";
-import graphqlRequestClient from "../../../clints/GQLRequestClient";
+import { graphqlAnilistRequestClient } from "../../../clints/GQLAnilistRequestClient";
 import { ChangeEvent } from "react";
 import { CharacterSearchCache } from "../../../generated/searchCharacterCache";
 import { LoadingList } from "../../loadingList";
@@ -106,7 +106,7 @@ const ListCharacter = () => {
   const searchKey = useCharacterDndStore((state) => state.searchKey);
 
   /* prettier-ignore */
-  const { data, isLoading, error } = useSearchCharacterQuery<SearchCharacterQuery,Error>( graphqlRequestClient,
+  const { data, isLoading, error } = useSearchCharacterQuery<SearchCharacterQuery,Error>( graphqlAnilistRequestClient,
     {search: searchKey },
     {
       staleTime: 1000 * 60 * 15,

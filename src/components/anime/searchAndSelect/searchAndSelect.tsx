@@ -5,7 +5,7 @@ import {
   SearchAnimeQuery,
   useSearchAnimeQuery,
 } from "../../../generated/graphql";
-import graphqlRequestClient from "../../../clints/GQLRequestClient";
+
 import { ChangeEvent } from "react";
 import { animeSearchCache } from "../../../generated/searchAnimeCache";
 import { LoadingList } from "../../loadingList";
@@ -19,6 +19,7 @@ import { SearchBarUi } from "../../utils/searchBarUi";
 import { compare } from "../../utils/compareBoarditems";
 import { createFilterCheckList } from "../../utils/createFilterCheckList";
 import { overlayprops } from "../../utils/typs";
+import { graphqlAnilistRequestClient } from "../../../clints/GQLAnilistRequestClient";
 
 type SelectorCardProps = {
   id: number | undefined;
@@ -107,7 +108,7 @@ const ListAnime = () => {
   const searchKey = useAnimeDndStore((state) => state.searchKey);
 
   /* prettier-ignore */
-  const { data, isLoading, error } = useSearchAnimeQuery<SearchAnimeQuery,Error>( graphqlRequestClient,
+  const { data, isLoading, error } = useSearchAnimeQuery<SearchAnimeQuery,Error>( graphqlAnilistRequestClient,
     {search: searchKey },
     {
       staleTime: 1000 * 60 * 15,

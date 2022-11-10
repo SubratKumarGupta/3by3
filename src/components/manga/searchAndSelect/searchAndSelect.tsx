@@ -5,7 +5,7 @@ import {
   SearchMangaQuery,
   useSearchMangaQuery,
 } from "../../../generated/graphql";
-import graphqlRequestClient from "../../../clints/GQLRequestClient";
+import { graphqlAnilistRequestClient } from "../../../clints/GQLAnilistRequestClient";
 import { ChangeEvent } from "react";
 import { mangaSearchCache } from "../../../generated/searchMangaCache";
 import { LoadingList } from "../../loadingList";
@@ -102,7 +102,7 @@ const ListManga = () => {
   const searchKey = useMangaDndStore((state) => state.searchKey);
 
   /* prettier-ignore */
-  const { data, isLoading, error } = useSearchMangaQuery<SearchMangaQuery,Error>( graphqlRequestClient,
+  const { data, isLoading, error } = useSearchMangaQuery<SearchMangaQuery,Error>( graphqlAnilistRequestClient,
     {search: searchKey },
     {
       staleTime: 1000 * 60 * 15,

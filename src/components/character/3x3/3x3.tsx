@@ -7,8 +7,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import useCharacterDndStore, { boardItems } from "../characterstate";
-
+import useCharacterDndStore from "../characterstate";
+import { boardItems } from "../../utils/typs";
 import { swapItemsInAnIndex } from "../../utils/swapItemsInAnIndex";
 import { updateIndex } from "../../utils/updateIndex";
 
