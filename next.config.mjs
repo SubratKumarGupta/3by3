@@ -1,5 +1,6 @@
 // @ts-check
 import { env } from "./src/env/server.mjs";
+import BundleAnalyzer from "@next/bundle-analyzer";
 
 /**
  * Don't be scared of the generics here.
@@ -10,8 +11,11 @@ import { env } from "./src/env/server.mjs";
  * @constraint {{import('next').NextConfig}}
  */
 function defineNextConfig(config) {
-  return config;
+  return withBundleAnalyzer(config);
 }
+const withBundleAnalyzer = BundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 export default defineNextConfig({
   images: {
