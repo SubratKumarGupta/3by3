@@ -11,7 +11,6 @@ export const graphqlAnilistRequestClient = new GraphQLClient(
     headers: {
       ["Accept"]: "application/json",
       ["Content-Type"]: "application/json",
-
       //authorization: "B9WB74eNu9hrEpuTiPZiaCeE5rl4lR314alwhV8S",./src/gen/graphql.ts
     },
   }

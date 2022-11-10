@@ -4,7 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import {
   SearchAnimeQuery,
   useSearchAnimeQuery,
-} from "../../../generated/graphql";
+} from "../../../generated/AnilistGraphql";
 
 import { ChangeEvent } from "react";
 import { animeSearchCache } from "../../../generated/searchAnimeCache";

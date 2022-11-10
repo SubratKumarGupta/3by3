@@ -1,7 +1,7 @@
 schema: https://graphql.anilist.co
-documents: "./src/**/*.graphql"
+documents: "./src/**/*.graphql/anilist"
 generates:
-  ./src/generated/graphql.ts:
+  ./src/generated/AnilistGraphql.ts:
     plugins:
       - typescript
       - typescript-operations

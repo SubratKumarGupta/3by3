@@ -7,7 +7,8 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "genGQL": "graphql-codegen --config codegen.yml",
+    "genAnilistGql": "graphql-codegen --config anilistCodegen.yml",
+    "genDgraphGql": "graphql-codegen --config dgraphCodegen.yml",
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
@@ -32,6 +33,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "^3.39.2",
+    "sharp": "^0.31.2",
     "superjson": "1.9.1",
     "tailwind-scrollbar-hide": "^1.1.7",
     "zod": "^3.18.0",

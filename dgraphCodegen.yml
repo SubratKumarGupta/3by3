@@ -1,0 +1,10 @@
+schema: http://localhost:8080/graphql
+documents: "./src/**/*.graphql/dgraph"
+generates:
+  ./src/generated/DgraphGraphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-query
+    config:
+      fetcher: graphql-request

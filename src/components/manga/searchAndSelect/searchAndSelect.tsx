@@ -4,7 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import {
   SearchMangaQuery,
   useSearchMangaQuery,
-} from "../../../generated/graphql";
+} from "../../../generated/AnilistGraphql";
 import { graphqlAnilistRequestClient } from "../../../clints/GQLAnilistRequestClient";
 import { ChangeEvent } from "react";
 import { mangaSearchCache } from "../../../generated/searchMangaCache";

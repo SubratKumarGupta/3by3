@@ -4,7 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import {
   SearchCharacterQuery,
   useSearchCharacterQuery,
-} from "../../../generated/graphql";
+} from "../../../generated/AnilistGraphql";
 import { graphqlAnilistRequestClient } from "../../../clints/GQLAnilistRequestClient";
 import { ChangeEvent } from "react";
 import { CharacterSearchCache } from "../../../generated/searchCharacterCache";
