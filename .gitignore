@@ -2,7 +2,7 @@
 
 #database storage
 /src/Database/Storage
-
+/src/Database/admin/scripts/build
 # dependencies
 /node_modules
 /.pnp

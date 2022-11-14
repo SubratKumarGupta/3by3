@@ -20,6 +20,9 @@ const config = {
         "typescript-operations",
         "typescript-graphql-request",
       ],
+      config: {
+        fetcher: "graphql-request",
+      },
     },
   },
 };

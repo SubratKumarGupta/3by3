@@ -7,6 +7,8 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
+    "dbScriptBuild": "yarn tsc --outDir src/Database/admin/scripts/build/output  src/Database/admin/scripts/sync.ts",
+    "syncdb": "node --require dotenv/config src/Database/admin/scripts/build/output/Database/admin/scripts/sync.js dotenv_config_path=.env",
     "genAdminDgraphGql": "graphql-codegen --require dotenv/config --config src/Database/adminConfig.ts dotenv_config_path=.env",
     "genAnilistGql": "graphql-codegen --config anilistCodegen.yml",
     "genDgraphGql": "graphql-codegen --config dgraphCodegen.yml",

@@ -1,14 +1,12 @@
 import { GraphQLClient } from "graphql-request";
-import { env } from "../env/server.mjs";
 
-const graphqlDgraphAdminRequestClient = new GraphQLClient(
-  "https://graphql.anilist.co",
+export const graphqlDgraphAdminRequestClient = new GraphQLClient(
+  "http://localhost:8080/admin",
   {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      "X-Dgraph-AuthToken": env.DGRAPH_GRAPHQL_KEY,
+      "X-Dgraph-AuthToken": `${process.env.DEV_DGRAPH_GRAPHQL_KEY}`,
     },
   }
 );
-export default graphqlDgraphAdminRequestClient;
