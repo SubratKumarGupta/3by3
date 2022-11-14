@@ -3,7 +3,7 @@ services:
   zero:
     image: dgraph/dgraph:latest
     volumes:
-      - ./Storage/zero:/dgraph
+      - zero:/dgraph
     ports:
       - 5080:5080
       - 6080:6080
@@ -12,14 +12,20 @@ services:
   alpha:
     image: dgraph/dgraph:latest
     volumes:
-      - ./Storage/alpha:/dgraph
+      - alpha:/dgraph
     ports:
       - 8080:8080
       - 9080:9080
     restart: on-failure
-    command: dgraph alpha --my=alpha:7080 --zero=zero:5080 --security whitelist=172.18.0.1 --cache size-mb=1024
+    command: dgraph alpha --my=alpha:7080 --zero=zero:5080 --security " token=${DEV_DGRAPH_GRAPHQL_KEY} ; whitelist=0.0.0.0/0 " --cache size-mb=1024
   ratel:
     image: dgraph/ratel:latest
     ports:
       - 8000:8000
     command: dgraph-ratel
+volumes:
+  zero:
+  alpha:
+# #whitelist=172.18.0.1
+# ODhhZWIwMzg5NTk0YmRjZWVhYzllODk4ZTU3ODA0NDQ
+# ODhhZWIwMzg5NTk0YmRjZWVhYzllODk4ZTU3ODA0NDQ

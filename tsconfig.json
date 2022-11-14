@@ -16,6 +16,14 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "src/Database/admin/scripts/generatedTyps.js",
+    "src/Database/admin/scripts/sync.js"
+  ],
   "exclude": ["node_modules"]
 }

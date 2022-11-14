@@ -7,8 +7,10 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
+    "genAdminDgraphGql": "graphql-codegen --require dotenv/config --config src/Database/adminConfig.ts dotenv_config_path=.env",
     "genAnilistGql": "graphql-codegen --config anilistCodegen.yml",
     "genDgraphGql": "graphql-codegen --config dgraphCodegen.yml",
+    "db": "docker-compose -f ./src/Database/devCluster.yml --env-file .env",
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
@@ -43,6 +45,7 @@
     "@graphql-codegen/cli": "2.13.7",
     "@graphql-codegen/client-preset": "1.1.0",
     "@graphql-codegen/typescript": "^2.7.5",
+    "@graphql-codegen/typescript-graphql-request": "^4.5.8",
     "@graphql-codegen/typescript-operations": "^2.5.5",
     "@graphql-codegen/typescript-react-query": "^4.0.3",
     "@tanstack/react-query-devtools": "^4.13.0",
