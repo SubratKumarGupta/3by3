@@ -1,7 +1,7 @@
 // import { readFile, writeFile, watchFile } from "fs";
 // @ts-check
 
-import { graphqlDgraphAdminRequestClient } from "../../../clints/GQLDgraphAdminClient";
+import { graphqlDgraphAdminRequestClient } from "../../../src/clints/GQLDgraphAdminClient";
 
 import { getSdk } from "./generatedTyps";
 

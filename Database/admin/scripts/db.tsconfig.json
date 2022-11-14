@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "outDir": "./build/output"
+  },
+  "sourceRoot": "./sync.ts",
+  "exclude": ["node_modules", "src"]
+}

@@ -1,8 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 #database storage
-/src/Database/Storage
-/src/Database/admin/scripts/build
+Database/Storage
+Database/admin/scripts/build
 # dependencies
 /node_modules
 /.pnp
