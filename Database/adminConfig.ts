@@ -12,9 +12,9 @@ const config = {
       },
     },
   ],
-  documents: ["src/Database/admin/oprations"],
+  documents: ["Database/admin/oprations"],
   generates: {
-    "./src/Database/admin/scripts/generatedTyps.ts": {
+    "./Database/admin/scripts/generatedTyps.ts": {
       plugins: [
         "typescript",
         "typescript-operations",
