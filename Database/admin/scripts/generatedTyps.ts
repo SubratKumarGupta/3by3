@@ -817,31 +817,48 @@ export type UserRef = {
   name: Scalars["String"];
 };
 
-export type CheckGenSchemaQueryVariables = Exact<{ [key: string]: never }>;
+export type GetGqlSchemaQueryVariables = Exact<{ [key: string]: never }>;
 
-export type CheckGenSchemaQuery = {
+export type GetGqlSchemaQuery = {
   __typename?: "Query";
-  getGQLSchema?: { __typename?: "GQLSchema"; generatedSchema: string } | null;
+  getGQLSchema?: {
+    __typename?: "GQLSchema";
+    schema: string;
+    generatedSchema: string;
+  } | null;
 };
 
-export type CheckSchemaQueryVariables = Exact<{ [key: string]: never }>;
+export type UpdateGqlSchemaMutationVariables = Exact<{
+  sch: Scalars["String"];
+}>;
 
-export type CheckSchemaQuery = {
-  __typename?: "Query";
-  getGQLSchema?: { __typename?: "GQLSchema"; schema: string } | null;
+export type UpdateGqlSchemaMutation = {
+  __typename?: "Mutation";
+  updateGQLSchema?: {
+    __typename?: "UpdateGQLSchemaPayload";
+    gqlSchema?: {
+      __typename?: "GQLSchema";
+      schema: string;
+      generatedSchema: string;
+    } | null;
+  } | null;
 };
 
-export const CheckGenSchemaDocument = gql`
-  query checkGenSchema {
+export const GetGqlSchemaDocument = gql`
+  query getGQLSchema {
     getGQLSchema {
+      schema
       generatedSchema
     }
   }
 `;
-export const CheckSchemaDocument = gql`
-  query checkSchema {
-    getGQLSchema {
-      schema
+export const UpdateGqlSchemaDocument = gql`
+  mutation updateGQLSchema($sch: String!) {
+    updateGQLSchema(input: { set: { schema: $sch } }) {
+      gqlSchema {
+        schema
+        generatedSchema
+      }
     }
   }
 `;
@@ -863,33 +880,33 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
   return {
-    checkGenSchema(
-      variables?: CheckGenSchemaQueryVariables,
+    getGQLSchema(
+      variables?: GetGqlSchemaQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<CheckGenSchemaQuery> {
+    ): Promise<GetGqlSchemaQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<CheckGenSchemaQuery>(
-            CheckGenSchemaDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
-          ),
-        "checkGenSchema",
-        "query"
-      );
-    },
-    checkSchema(
-      variables?: CheckSchemaQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<CheckSchemaQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CheckSchemaQuery>(CheckSchemaDocument, variables, {
+          client.request<GetGqlSchemaQuery>(GetGqlSchemaDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        "checkSchema",
+        "getGQLSchema",
         "query"
+      );
+    },
+    updateGQLSchema(
+      variables: UpdateGqlSchemaMutationVariables,
+      requestHeaders?: Dom.RequestInit["headers"]
+    ): Promise<UpdateGqlSchemaMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<UpdateGqlSchemaMutation>(
+            UpdateGqlSchemaDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        "updateGQLSchema",
+        "mutation"
       );
     },
   };
