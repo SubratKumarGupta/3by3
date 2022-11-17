@@ -1,14 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
-// import { signIn, signOut, useSession } from "next-auth/react";
-// import { trpc } from "../../utils/trpc";
 
-const Profile: NextPage = () => {
-  //const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
-  const router = useRouter();
-  const { profileID } = router.query;
-
+const ProfileEdit: NextPage = () => {
   return (
     <>
       <Head>
@@ -17,17 +10,9 @@ const Profile: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex items-center justify-center">
-        <h1>{profileID}</h1>
-
-        {/* <div className="flex w-full items-center justify-center pt-2 text-2xl text-blue-500">
-          {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
-        </div>
-
-        <AuthShowcase /> */}
-      </main>
+      <main className="flex items-center justify-center"></main>
     </>
   );
 };
 
-export default Profile;
+export default ProfileEdit;
