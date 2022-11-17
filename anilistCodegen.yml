@@ -1,5 +1,5 @@
 schema: https://graphql.anilist.co
-documents: "./src/**/*.graphql/anilist"
+documents: "./src/graphql/anilist"
 generates:
   ./src/generated/AnilistGraphql.ts:
     plugins:

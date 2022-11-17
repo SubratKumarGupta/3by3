@@ -1,10 +1,21 @@
 schema: http://localhost:8080/graphql
-documents: "./src/**/*.graphql/dgraph"
+documents: "./src/graphql/dgraph"
 generates:
-  ./src/generated/DgraphGraphql.ts:
+  ./src/generated/DgraphClintGraphql.ts:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-react-query
+      - typescript-graphql-request
     config:
+      namingConvention:
+        enumValues: keep
+      fetcher: graphql-request
+  ./src/generated/DgraphServerGraphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request
+    config:
+      namingConvention:
+        enumValues: keep
       fetcher: graphql-request

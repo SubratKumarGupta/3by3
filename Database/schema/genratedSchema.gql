@@ -26,14 +26,25 @@ type Session {
 	user(filter: UserFilter): User @hasInverse(field: "sessions")
 }
 
+type Post {
+	id: ID
+	name: String! @search(by: [fulltext,exact])
+	createdAt: DateTime
+	description: String!
+	user(filter: UserFilter): User @hasInverse(field: "posts")
+}
+
 type User {
 	id: ID
-	name: String
+	name: String @search(by: [fulltext,exact])
 	email: String @search(by: [hash])
 	emailVerified: DateTime
 	image: String
+	description: String
+	posts(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post] @hasInverse(field: "user")
 	accounts(filter: AccountFilter, order: AccountOrder, first: Int, offset: Int): [Account] @hasInverse(field: "user")
 	sessions(filter: SessionFilter, order: SessionOrder, first: Int, offset: Int): [Session] @hasInverse(field: "user")
+	postsAggregate(filter: PostFilter): PostAggregateResult
 	accountsAggregate(filter: AccountFilter): AccountAggregateResult
 	sessionsAggregate(filter: SessionFilter): SessionAggregateResult
 }
@@ -346,6 +357,11 @@ type AddAccountPayload {
 	numUids: Int
 }
 
+type AddPostPayload {
+	post(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
+	numUids: Int
+}
+
 type AddSessionPayload {
 	session(filter: SessionFilter, order: SessionOrder, first: Int, offset: Int): [Session]
 	numUids: Int
@@ -363,6 +379,12 @@ type AddVerificationTokenPayload {
 
 type DeleteAccountPayload {
 	account(filter: AccountFilter, order: AccountOrder, first: Int, offset: Int): [Account]
+	msg: String
+	numUids: Int
+}
+
+type DeletePostPayload {
+	post(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
 	msg: String
 	numUids: Int
 }
@@ -385,6 +407,16 @@ type DeleteVerificationTokenPayload {
 	numUids: Int
 }
 
+type PostAggregateResult {
+	count: Int
+	nameMin: String
+	nameMax: String
+	createdAtMin: DateTime
+	createdAtMax: DateTime
+	descriptionMin: String
+	descriptionMax: String
+}
+
 type SessionAggregateResult {
 	count: Int
 	expiresMin: DateTime
@@ -395,6 +427,11 @@ type SessionAggregateResult {
 
 type UpdateAccountPayload {
 	account(filter: AccountFilter, order: AccountOrder, first: Int, offset: Int): [Account]
+	numUids: Int
+}
+
+type UpdatePostPayload {
+	post(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
 	numUids: Int
 }
 
@@ -423,6 +460,8 @@ type UserAggregateResult {
 	emailVerifiedMax: DateTime
 	imageMin: String
 	imageMax: String
+	descriptionMin: String
+	descriptionMax: String
 }
 
 type VerificationTokenAggregateResult {
@@ -470,6 +509,19 @@ enum AccountOrderable {
 	session_state
 }
 
+enum PostHasFilter {
+	name
+	createdAt
+	description
+	user
+}
+
+enum PostOrderable {
+	name
+	createdAt
+	description
+}
+
 enum SessionHasFilter {
 	expires
 	sessionToken
@@ -486,6 +538,8 @@ enum UserHasFilter {
 	email
 	emailVerified
 	image
+	description
+	posts
 	accounts
 	sessions
 }
@@ -495,6 +549,7 @@ enum UserOrderable {
 	email
 	emailVerified
 	image
+	description
 }
 
 enum VerificationTokenHasFilter {
@@ -578,6 +633,13 @@ input AddAccountInput {
 	user: UserRef
 }
 
+input AddPostInput {
+	name: String!
+	createdAt: DateTime
+	description: String!
+	user: UserRef
+}
+
 input AddSessionInput {
 	expires: DateTime
 	sessionToken: String
@@ -589,6 +651,8 @@ input AddUserInput {
 	email: String
 	emailVerified: DateTime
 	image: String
+	description: String
+	posts: [PostRef]
 	accounts: [AccountRef]
 	sessions: [SessionRef]
 }
@@ -597,6 +661,36 @@ input AddVerificationTokenInput {
 	identifier: String
 	token: String
 	expires: DateTime
+}
+
+input PostFilter {
+	id: [ID!]
+	name: StringExactFilter_StringFullTextFilter
+	has: [PostHasFilter]
+	and: [PostFilter]
+	or: [PostFilter]
+	not: PostFilter
+}
+
+input PostOrder {
+	asc: PostOrderable
+	desc: PostOrderable
+	then: PostOrder
+}
+
+input PostPatch {
+	name: String
+	createdAt: DateTime
+	description: String
+	user: UserRef
+}
+
+input PostRef {
+	id: ID
+	name: String
+	createdAt: DateTime
+	description: String
+	user: UserRef
 }
 
 input SessionFilter {
@@ -627,10 +721,28 @@ input SessionRef {
 	user: UserRef
 }
 
+input StringExactFilter_StringFullTextFilter {
+	eq: String
+	in: [String]
+	le: String
+	lt: String
+	ge: String
+	gt: String
+	between: StringRange
+	alloftext: String
+	anyoftext: String
+}
+
 input UpdateAccountInput {
 	filter: AccountFilter!
 	set: AccountPatch
 	remove: AccountPatch
+}
+
+input UpdatePostInput {
+	filter: PostFilter!
+	set: PostPatch
+	remove: PostPatch
 }
 
 input UpdateSessionInput {
@@ -653,6 +765,7 @@ input UpdateVerificationTokenInput {
 
 input UserFilter {
 	id: [ID!]
+	name: StringExactFilter_StringFullTextFilter
 	email: StringHashFilter
 	has: [UserHasFilter]
 	and: [UserFilter]
@@ -671,6 +784,8 @@ input UserPatch {
 	email: String
 	emailVerified: DateTime
 	image: String
+	description: String
+	posts: [PostRef]
 	accounts: [AccountRef]
 	sessions: [SessionRef]
 }
@@ -681,6 +796,8 @@ input UserRef {
 	email: String
 	emailVerified: DateTime
 	image: String
+	description: String
+	posts: [PostRef]
 	accounts: [AccountRef]
 	sessions: [SessionRef]
 }
@@ -725,6 +842,9 @@ type Query {
 	getSession(id: ID!): Session
 	querySession(filter: SessionFilter, order: SessionOrder, first: Int, offset: Int): [Session]
 	aggregateSession(filter: SessionFilter): SessionAggregateResult
+	getPost(id: ID!): Post
+	queryPost(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
+	aggregatePost(filter: PostFilter): PostAggregateResult
 	getUser(id: ID!): User
 	queryUser(filter: UserFilter, order: UserOrder, first: Int, offset: Int): [User]
 	aggregateUser(filter: UserFilter): UserAggregateResult
@@ -744,6 +864,9 @@ type Mutation {
 	addSession(input: [AddSessionInput!]!): AddSessionPayload
 	updateSession(input: UpdateSessionInput!): UpdateSessionPayload
 	deleteSession(filter: SessionFilter!): DeleteSessionPayload
+	addPost(input: [AddPostInput!]!): AddPostPayload
+	updatePost(input: UpdatePostInput!): UpdatePostPayload
+	deletePost(filter: PostFilter!): DeletePostPayload
 	addUser(input: [AddUserInput!]!): AddUserPayload
 	updateUser(input: UpdateUserInput!): UpdateUserPayload
 	deleteUser(filter: UserFilter!): DeleteUserPayload
