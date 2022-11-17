@@ -1,14 +1,15 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../../utils/trpc";
 
-const Profile: NextPage = () => {
-  //const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+const ProfilePage: NextPage = () => {
   const router = useRouter();
-  const { profile } = router.query;
-
+  const { profileID } = router.query;
+  const { data, isLoading } = trpc.user.getUserProfile.useQuery({
+    userId: `${profileID}`,
+  });
+  if (isLoading) return <div>loding...</div>;
   return (
     <>
       <Head>
@@ -17,9 +18,10 @@ const Profile: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex items-center justify-center">
-        <h1>{profile}</h1>
-
+      <main>
+        {/* <h1>{profileData.data?.profile}</h1> */}
+        <h2> /n path {`${JSON.stringify(data)}`}</h2>
+        <h1>sss {profileID}</h1>
         {/* <div className="flex w-full items-center justify-center pt-2 text-2xl text-blue-500">
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
         </div>
@@ -30,4 +32,4 @@ const Profile: NextPage = () => {
   );
 };
 
-export default Profile;
+export default ProfilePage;
