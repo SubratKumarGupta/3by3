@@ -19,7 +19,11 @@ const withBundleAnalyzer = BundleAnalyzer({
 
 export default defineNextConfig({
   images: {
-    domains: ["s4.anilist.co", "www.freeiconspng.com"],
+    domains: [
+      "s4.anilist.co",
+      "www.freeiconspng.com",
+      "lh3.googleusercontent.com",
+    ],
   },
   reactStrictMode: true,
   swcMinify: true,

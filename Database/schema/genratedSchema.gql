@@ -36,6 +36,7 @@ type Post {
 
 type User {
 	id: ID
+	createdAt: DateTime
 	name: String @search(by: [fulltext,exact])
 	email: String @search(by: [hash])
 	emailVerified: DateTime
@@ -452,6 +453,8 @@ type UpdateVerificationTokenPayload {
 
 type UserAggregateResult {
 	count: Int
+	createdAtMin: DateTime
+	createdAtMax: DateTime
 	nameMin: String
 	nameMax: String
 	emailMin: String
@@ -534,6 +537,7 @@ enum SessionOrderable {
 }
 
 enum UserHasFilter {
+	createdAt
 	name
 	email
 	emailVerified
@@ -545,6 +549,7 @@ enum UserHasFilter {
 }
 
 enum UserOrderable {
+	createdAt
 	name
 	email
 	emailVerified
@@ -647,6 +652,7 @@ input AddSessionInput {
 }
 
 input AddUserInput {
+	createdAt: DateTime
 	name: String
 	email: String
 	emailVerified: DateTime
@@ -780,6 +786,7 @@ input UserOrder {
 }
 
 input UserPatch {
+	createdAt: DateTime
 	name: String
 	email: String
 	emailVerified: DateTime
@@ -792,6 +799,7 @@ input UserPatch {
 
 input UserRef {
 	id: ID
+	createdAt: DateTime
 	name: String
 	email: String
 	emailVerified: DateTime

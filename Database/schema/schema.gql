@@ -29,6 +29,7 @@ type Post {
 }
 type User {
   id: ID
+  createdAt: DateTime
   name: String @search(by: [fulltext, exact])
   email: String @search(by: [hash])
   emailVerified: DateTime
