@@ -1,6 +1,6 @@
 import { DragOverlay } from "@dnd-kit/core";
 
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { overlayprops } from "./typs";
 type props = {
   activeId: overlayprops | null;
