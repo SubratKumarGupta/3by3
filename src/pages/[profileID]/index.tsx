@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React from "react";
 import { UserProfile } from "../../components/social/profilePage/userInfo";
+import Costom404 from "../404";
 
 const ProfilePage: NextPage = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const ProfilePage: NextPage = () => {
 
   if (isLoading) return <div>loding...</div>;
   if (error) {
-    router.push("/404");
+    Costom404;
   }
   function capitalizeFirstLetter(string: string | undefined | null) {
     return `${string?.charAt(0).toUpperCase()}` + `${string?.slice(1)}`;
@@ -34,32 +35,34 @@ const ProfilePage: NextPage = () => {
       ? data?.profile.getUser?.image
       : "https://www.freeiconspng.com/img/23486"
   }`;
-  return (
-    <>
-      <Head>
-        <title>3x3</title>
-        <meta name="3x3" content="create a 3x3" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+  if (data)
+    return (
+      <>
+        <Head>
+          <title>3x3</title>
+          <meta name="3x3" content="create a 3x3" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
 
-      <main
-        className="
+        <main
+          className="
           grid   
           h-screen 
           w-screen
           grid-flow-col-dense grid-cols-[27%,45%,28%] 
           grid-rows-1
           overflow-hidden"
-      >
-        <div className="flex h-full w-full flex-col  bg-slate-500">
-          <UserProfile type={"NOT_FOLLOWING"} image={image} name={Username} />
-          <div className="h-full w-full bg-orange-500"> joojo</div>
-        </div>
-        <div className="h-full w-full bg-slate-600"></div>
-        <div className="h-full w-full  bg-slate-700"></div>
-      </main>
-    </>
-  );
+        >
+          <div className="flex h-full w-full flex-col  bg-slate-500">
+            <UserProfile type={"NOT_FOLLOWING"} image={image} name={Username} />
+            <div className="h-full w-full bg-orange-500"> joojo</div>
+          </div>
+          <div className="h-full w-full bg-slate-600"></div>
+          <div className="h-full w-full  bg-slate-700"></div>
+        </main>
+      </>
+    );
+  return null;
 };
 
 export default ProfilePage;
