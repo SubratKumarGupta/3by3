@@ -141,14 +141,14 @@ export const TxTList: React.FC<TxTListType> = ({ acative, posts }) => {
                   router.push(`/${router.query.profileID}?postId=${post.id}`);
                 }}
                 key={i}
-                className="3by3 h-12 cursor-pointer pr-4 "
+                className="3by3  h-12 cursor-pointer pr-4 "
               >
                 <span
                   className={` 
                     ${
                       acative == post.id
-                        ? " my-2 text-2xl font-semibold text-blue-700 hover:text-blue-500 "
-                        : "  text-xl font-semibold text-gray-400 hover:text-gray-300 "
+                        ? " my-2 text-2xl font-semibold text-blue-700 transition-all hover:text-blue-500 "
+                        : "  text-xl font-semibold text-gray-400 transition-all hover:text-gray-300 "
                     }
                     inline 
                     w-full 
