@@ -154,22 +154,28 @@ export const UserProfile = ({ name, image, type }: UserProfile) => {
           {/* add edit profile or detailes components base on profile*/}
         </div>
         {/* Details */}
-        {showDetails ? (
-          <div className="detaile mt-4 ml-3 mr-3 h-[25vh] text-sm text-white transition duration-150 ease-in-out">
-            {linkify(
-              `Hi am subrat, I like anime, manga and games pls rate my 3x3 iflike them contact me at http://localhost`
-            )}
-          </div>
-        ) : null}
-
-        {/* show more or less btn */}
-        <div className="show-more absolute bottom-0 right-0 mr-1 mb-1 cursor-pointer text-sm font-semibold text-gray-500 hover:text-gray-300">
-          {showDetails ? (
-            <div onClick={handelShowClick}>show less</div>
-          ) : (
-            <div onClick={handelShowClick}>show more</div>
+        {/* {showDetails ? ( */}
+        <div
+          className={`${
+            showDetails ? "h-[25vh]" : "h-0"
+          } detaile mt-4 ml-3 mr-3 text-sm text-white transition-all duration-300 ease-in-out`}
+        >
+          {linkify(
+            `Hi am subrat, I like anime, manga and games pls rate my 3x3 iflike them contact me at http://localhost`
           )}
         </div>
+        {/* ) : null} */}
+
+        {/* show more or less btn */}
+        {
+          <div
+            onClick={handelShowClick}
+            className="show-more absolute bottom-0 right-0 mr-1 mb-1 cursor-pointer text-sm font-semibold text-gray-500 hover:text-gray-300"
+          >
+            {showDetails ? "show less" : "show more"}
+          </div>
+        }
+        {/* {showDetails ? <div></div> : <div onClick={handelShowClick}></div>} */}
       </div>
     </>
   );
