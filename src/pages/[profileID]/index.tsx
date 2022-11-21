@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { NextRouter, useRouter } from "next/router";
+import router, { NextRouter, useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { UserProfile } from "../../components/social/profilePage/userInfo";
 import { Costom404 } from "../404";
 
@@ -92,54 +92,222 @@ const posts = [
       },
     ],
   },
+  {
+    id: "random6",
+    name: "my_post_3by3_1",
+    comment: [
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+    ],
+  },
+  {
+    id: "random7",
+    name: "my_post_3by3_1",
+    comment: [
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+    ],
+  },
+  {
+    id: "random8",
+    name: "my_post_3by3_1",
+    comment: [
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+    ],
+  },
+  {
+    id: "random9",
+    name: "my_post_3by3_1",
+    comment: [
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+    ],
+  },
+  {
+    id: "random10",
+    name: "my_post_3by3_1",
+    comment: [
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+    ],
+  },
+  {
+    id: "random11",
+    name: "my_post_3by3_1",
+    comment: [
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+    ],
+  },
+  {
+    id: "random12",
+    name: "my_post_3by3_1",
+    comment: [
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+      {
+        comenter: "subrat",
+        content: "i like this",
+      },
+    ],
+  },
 ];
 type TxT = {
   acative: string;
   posts: typeof posts;
   setAcative: (postID: string) => void;
 };
+const isdDivScrolling = {
+  current: false,
+};
 const TxT = ({ posts, acative }: TxT) => {
   // userProfile-post-feed
+  const router = useRouter();
+  const PostTabRef = useRef<HTMLDivElement>(null);
+  const PostItems = useRef<HTMLDivElement[]>([]);
+
   const element = document.getElementById(acative);
   if (element) {
     // 👇 Will scroll smoothly to the top of the next section
+
     element?.scrollIntoView({ behavior: "smooth" });
   }
+
+  const win = document.getElementById("userProfile-post-feed");
+  const onScrollEnd = (fn: () => void): void => {
+    if (!win) return;
+    let scrollTimeout: number | undefined;
+    const listener = (): void => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = window.setTimeout(() => {
+        win.removeEventListener("scroll", listener);
+        fn();
+      }, 100);
+    };
+    win.addEventListener("scroll", listener);
+  };
+  onScrollEnd(() => {
+    // console.log("scrollE");
+    isdDivScrolling.current = false;
+  });
+
+  useEffect(() => {
+    const Observer = new IntersectionObserver(
+      (entrys) => {
+        if (entrys[0] && entrys.length === 1) {
+          console.log("ss", entrys[0].target.id, router.query.postId);
+          if (isdDivScrolling.current) return;
+          router.push(
+            `/${router.query.profileID}?postId=${entrys[0].target.id}`
+          );
+        }
+      },
+      { root: PostTabRef.current, threshold: 1 }
+    );
+
+    PostItems.current.forEach((post) => {
+      Observer.observe(post);
+    });
+    return () => {
+      Observer.disconnect;
+    };
+  }, [acative]);
+
   return (
     <>
-      {posts.map((post, i) => {
-        return (
-          <div id={post.id} key={i} className="mx-auto mt-3 mb-3 ">
-            <div className="max-w-sm rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
-              <div className=" h-96 w-96 cursor-pointer bg-[#0f172a]"></div>
-              <div className="p-5">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  {post.name}
-                </h5>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  {`"Here are the biggest enterprise technology acquisitions of2021 so far," ${post.name}`}
-                </p>
-                <div className="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  Read more
-                  <svg
-                    aria-hidden="true"
-                    className="ml-2 -mr-1 h-4 w-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
+      <div
+        onPointerOver={(e) => {
+          if ((isdDivScrolling.current = true)) {
+            isdDivScrolling.current = false;
+          }
+          console.log("scrollA", e);
+        }}
+        ref={PostTabRef}
+        id="userProfile-post-feed"
+        className="flex h-full w-full flex-col overflow-y-scroll scroll-smooth bg-slate-600 scrollbar-hide"
+      >
+        {posts.map((post, i) => {
+          return (
+            <div
+              ref={(element) => {
+                if (element !== null) {
+                  PostItems.current.push(element);
+                }
+              }}
+              id={post.id}
+              key={i}
+              className="mx-auto mt-3 mb-3 "
+            >
+              <div className="max-w-sm rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
+                <div className=" h-96 w-96 cursor-pointer bg-[#0f172a]"></div>
+                <div className="p-5">
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    {post.name}
+                  </h5>
+                  <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                    {`"Here are the biggest enterprise technology acquisitions of2021 so far," ${post.name}`}
+                  </p>
+                  <div className="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Read more
+                    <svg
+                      aria-hidden="true"
+                      className="ml-2 -mr-1 h-4 w-4"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </>
   );
 };
@@ -160,14 +328,18 @@ const T3TList: React.FC<T3TListType> = ({ acative, posts }) => {
           </div>
           {posts.map((post, i) => {
             return (
-              <Link
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log("boo");
+                  isdDivScrolling.current = true;
+                  router.push(`/${router.query.profileID}?postId=${post.id}`);
+                }}
                 key={i}
-                replace={true}
-                href={`/${router.query.profileID}?postId=${post.id}`}
+                className="3by3 h-12 cursor-pointer pr-4 "
               >
-                <div key={i} className="3by3 h-12 cursor-pointer pr-4 ">
-                  <span
-                    className={` 
+                <span
+                  className={` 
                   ${
                     acative == post.id
                       ? " my-2 text-2xl font-semibold text-blue-700 hover:text-blue-500 "
@@ -180,11 +352,10 @@ const T3TList: React.FC<T3TListType> = ({ acative, posts }) => {
                   overflow-ellipsis  
                   whitespace-nowrap 
                   pl-24`}
-                  >
-                    {`--${post.name}`}
-                  </span>
-                </div>
-              </Link>
+                >
+                  {`--${post.name}`}
+                </span>
+              </div>
             );
           })}
         </div>
@@ -253,13 +424,10 @@ const ProfilePage: NextPage = () => {
             <UserProfile type={"NOT_FOLLOWING"} image={image} name={Username} />
             <T3TList acative={acative} posts={posts} />
           </div>
-          <div
-            id="userProfile-post-feed"
-            className="flex h-full w-full flex-col overflow-y-scroll scroll-smooth bg-slate-600 scrollbar-hide"
-          >
-            {/* temp post for testing */}
-            <TxT posts={posts} setAcative={setAcative} acative={acative} />
-          </div>
+
+          {/* temp post for testing */}
+          <TxT posts={posts} setAcative={setAcative} acative={acative} />
+
           <div className="h-full w-full  bg-slate-700"></div>
         </main>
       </>
