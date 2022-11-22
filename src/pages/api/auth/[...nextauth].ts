@@ -1,6 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { DgraphAdapter } from "@next-auth/dgraph-adapter"
+import { DgraphAdapter } from "@next-auth/dgraph-adapter";
 import { env } from "../../../env/server.mjs";
 
 export const authOptions: NextAuthOptions = {
@@ -13,18 +13,16 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
- 
+
   adapter: DgraphAdapter({
     endpoint: env.DGRAPH_GRAPHQL_ENDPOINT,
     authToken: env.DGRAPH_GRAPHQL_KEY,
 
     // you can omit the following properties if you are running an unsecure schema
-    authHeader: env.AUTH_HEADER, // default: "Authorization",
-    jwtSecret:  env.SECRET,
+    // authHeader: env.AUTH_HEADER, // default: "Authorization",
+    // jwtSecret:  env.SECRET,
   }),
 
-  
-  
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
@@ -35,6 +33,3 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
-
-
-
