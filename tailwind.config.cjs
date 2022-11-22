@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      scale: {
+        "-1": "-1",
+      },
       backgroundImage: {
         "dark-gradint-1": "url('/img/dark_backround.svg')",
       },
