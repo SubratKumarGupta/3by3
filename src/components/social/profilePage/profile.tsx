@@ -5,8 +5,9 @@ import { trpc } from "../../../utils/trpc";
 import { TxT, TxTList } from "./postFeedAndList";
 import { UserProfile } from "./userInfo";
 import Image from "next/image";
+import { Comments } from "../posts/comments";
 
-const posts = [
+export const posts = [
   {
     id: "random",
     name: "my_post_3by3_1",
@@ -243,7 +244,7 @@ export const Profile = () => {
 
         {/* temp post for testing */}
         <TxT posts={posts} acative={acative} />
-
+        <Comments image={image} />
         <div className="relative overflow-x-clip overflow-y-scroll bg-[#0f172a] scrollbar-hide">
           {/* <div className="add-comment fixed w-full bg-black">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae,
@@ -257,7 +258,7 @@ export const Profile = () => {
                 key={i}
                 className="comment relative m-3 flex justify-start p-1"
               >
-                <div className="report absolute top-0 right-0 mt-2 mr-1  rotate-90 cursor-pointer text-lg font-bold">
+                <div className="report absolute top-0 right-0 mt-2 mr-1 rotate-90 cursor-pointer text-lg font-bold text-white hover:text-cyan-500">
                   ...
                 </div>
                 <div className="user-avater relative mr-2 aspect-square h-9 w-9">
@@ -268,7 +269,7 @@ export const Profile = () => {
                     fill={true}
                   />
                 </div>
-                <div className="comment-content w-full rounded-lg  p-3 shadow-sm">
+                <div className="comment-content w-full p-2 shadow-sm">
                   <div className="name text-white">
                     <strong>Sarah</strong>
                     <span className="ml-1 text-sm font-medium text-gray-500">
@@ -346,7 +347,7 @@ export const Profile = () => {
                       <div className="dislike ml-3 h-4 w-4 rotate-180 cursor-pointer ">
                         <div className="like-btn aspect-square h-full w-full">
                           <svg
-                            fill="#000000"
+                            fill="#00ffff"
                             version="1.1"
                             id="Capa_1"
                             x="0px"

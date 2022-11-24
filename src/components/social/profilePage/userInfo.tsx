@@ -34,6 +34,7 @@ function linkify(str: string) {
   }
   return results;
 }
+
 type Acations = {
   type: "NOT_FOLLOWING" | "FOLLOWING" | "MY_PROFILE";
   handelFollow: () => null;
