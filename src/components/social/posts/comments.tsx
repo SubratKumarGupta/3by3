@@ -40,7 +40,7 @@ const AddReplyForm = () => {
 const Replies: React.FC<{
   image: string;
 }> = ({ image }) => {
-  const [showAddReplies, setAddReplies] = useState(false);
+  const [showAddReplies, setAddReplies] = useState(true);
   const handelShowAddRepliesOnclick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -172,7 +172,7 @@ const Replies: React.FC<{
 
 const Comment: React.FC<image> = ({ image }) => {
   const [showReplies, setSnowReplies] = useState(false);
-  const [showAddReplies, setAddReplies] = useState(false);
+  const [showAddReplies, setAddReplies] = useState(true);
 
   const handelShowAddRepliesOnclick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
