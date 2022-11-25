@@ -5,10 +5,51 @@ import { posts } from "../profilePage/profile";
 
 type image = { image: string };
 
+const AddReplyForm = () => {
+  return (
+    <>
+      <div className="Reply ">
+        <div className="input mx-auto  ">
+          <form className="w-full max-w-sm">
+            <div className="flex items-center border-b border-cyan-500 ">
+              <input
+                className="mr-3 w-full appearance-none border-none bg-transparent  px-2 leading-tight text-gray-300 focus:outline-none"
+                type="text"
+                placeholder="Add a comment"
+                aria-label="Full name"
+              ></input>
+              <div className="actions mt-3 flex justify-between px-3">
+                <div className="comment">
+                  <button
+                    className=" -mr-3  flex-shrink-0 rounded-full border-2 border-transparent px-2  pb-2 text-sm font-semibold text-white hover:text-cyan-500"
+                    type="button"
+                  >
+                    Reply
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div className="actions"></div>
+      </div>
+    </>
+  );
+};
+
 const Replies: React.FC<{
   image: string;
 }> = ({ image }) => {
+  const [showAddReplies, setAddReplies] = useState(false);
+  const handelShowAddRepliesOnclick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    setAddReplies(!showAddReplies);
+  };
+
   const replies = ["1", "2", "3", "5", "6", "7"];
+
   return (
     <>
       {replies.map((replies, i) => {
@@ -39,8 +80,11 @@ const Replies: React.FC<{
               cupiditate aspernatur at cupiditate aspernatur at
             </div>
             <div className="interactions flex justify-between">
-              <div className="reply group flex cursor-pointer items-center text-gray-500 hover:text-gray-200">
-                <span>Reply</span>
+              <div
+                onClick={handelShowAddRepliesOnclick}
+                className="reply group flex cursor-pointer items-center text-gray-500 hover:text-gray-200"
+              >
+                {showAddReplies ? <span>Reply</span> : <div>Cancel</div>}
               </div>
               <div className="like&dislike mr-3 flex">
                 <div className="like h-4 w-4 cursor-pointer ">
@@ -109,6 +153,13 @@ const Replies: React.FC<{
                 </div>
               </div>
             </div>
+            <div
+              className={` ${
+                showAddReplies ? "h-0 scale-0 opacity-0" : "opacity-1 scale-100"
+              } add-reply w-full transition-all`}
+            >
+              <AddReplyForm />
+            </div>
           </div>
         );
       })}
@@ -121,7 +172,16 @@ const Replies: React.FC<{
 
 const Comment: React.FC<image> = ({ image }) => {
   const [showReplies, setSnowReplies] = useState(false);
-  const handelShowRepliesRepliesOnclick = (
+  const [showAddReplies, setAddReplies] = useState(false);
+
+  const handelShowAddRepliesOnclick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    setAddReplies(!showAddReplies);
+  };
+
+  const handelShowRepliesOnclick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.stopPropagation();
@@ -158,7 +218,7 @@ const Comment: React.FC<image> = ({ image }) => {
             <div className="flex items-center ">
               <div className="repliesPrewiew">
                 <div
-                  onClick={handelShowRepliesRepliesOnclick}
+                  onClick={handelShowRepliesOnclick}
                   className="group mt-4 flex cursor-pointer items-center "
                 >
                   <div className="flex items-center">
@@ -189,8 +249,11 @@ const Comment: React.FC<image> = ({ image }) => {
                   </div>
                 </div>
               </div>
-              <div className="reply  group -mb-4 ml-5 flex cursor-pointer items-center text-gray-500 hover:text-gray-200">
-                <span>Reply</span>
+              <div
+                onClick={handelShowAddRepliesOnclick}
+                className={`reply group -mb-4 ml-5 flex cursor-pointer items-center text-gray-500 transition-all hover:text-gray-200`}
+              >
+                {showAddReplies ? <span>Reply</span> : <div>Cancel</div>}
               </div>
             </div>
 
@@ -260,6 +323,13 @@ const Comment: React.FC<image> = ({ image }) => {
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            className={` ${
+              showAddReplies ? "h-0 scale-0 opacity-0" : "opacity-1 scale-100"
+            } add-reply w-full transition-all`}
+          >
+            <AddReplyForm />
           </div>
           <div
             className={`${
