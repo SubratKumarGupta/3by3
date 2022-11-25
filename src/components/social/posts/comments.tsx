@@ -1,4 +1,3 @@
-import { map } from "lodash";
 import Image from "next/image";
 import React from "react";
 import { useState } from "react";
@@ -7,9 +6,8 @@ import { posts } from "../profilePage/profile";
 type image = { image: string };
 
 const Replies: React.FC<{
-  setShow: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   image: string;
-}> = ({ image, setShow }) => {
+}> = ({ image }) => {
   const replies = ["1", "2", "3", "5", "6", "7"];
   return (
     <>
@@ -167,9 +165,7 @@ const Comment: React.FC<image> = ({ image }) => {
                     <div
                       className={`
                   ${showReplies ? "w-0 opacity-0" : "w-auto opacity-100"}
-                  mr-2 flex -space-x-${
-                    topRepliesPrewiew.length
-                  } transition-all duration-200`}
+                  mr-2 flex -space-x-3 transition-all duration-200`}
                     >
                       {topRepliesPrewiew.map((imgSrc, i) => {
                         return (
@@ -273,7 +269,7 @@ const Comment: React.FC<image> = ({ image }) => {
             } replies p-2
             transition-all duration-300`}
           >
-            <Replies setShow={handelShowRepliesRepliesOnclick} image={image} />
+            <Replies image={image} />
           </div>
         </div>
       </div>
@@ -281,7 +277,7 @@ const Comment: React.FC<image> = ({ image }) => {
   );
 };
 
-const AddReplyForm = ({ image }: { image: string }) => {
+const AddCommentForm = ({ image }: { image: string }) => {
   return (
     <div className="Reply ">
       <div className="input mx-auto  ">
@@ -371,7 +367,7 @@ export const Comments = ({ image }: { image: string }) => {
             {comments.length + " Comments"}
           </div>
         </div>
-        <AddReplyForm image={image} />
+        <AddCommentForm image={image} />
         {comments.map((_, i) => {
           return <Comment image={image} key={i} />;
         })}
