@@ -158,15 +158,13 @@ export const UserProfile = ({ name, image, type }: UserProfile) => {
         {/* {showDetails ? ( */}
         <div
           className={`${
-            showDetails ? "h-[25vh]" : "h-0"
+            showDetails ? "h-[25vh] opacity-100" : "h-0 opacity-0"
           } detaile mt-4 ml-3 mr-3 text-sm text-white transition-all duration-300 ease-in-out`}
         >
           {linkify(
             `Hi am subrat, I like anime, manga and games pls rate my 3x3 iflike them contact me at http://localhost`
           )}
         </div>
-        {/* ) : null} */}
-
         {/* show more or less btn */}
         {
           <div
