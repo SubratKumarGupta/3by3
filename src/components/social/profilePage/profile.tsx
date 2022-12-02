@@ -234,6 +234,7 @@ export const Profile = () => {
       ? data?.profile.getUser?.image
       : "https://www.freeiconspng.com/img/23486"
   }`;
+  console.log(image, "iim");
   if (data)
     return (
       <>

@@ -23,7 +23,6 @@ export const TxT = ({ posts, acative }: TxT) => {
 
     element?.scrollIntoView({ behavior: "smooth" });
   }
-
   useEffect(() => {
     const Observer = new IntersectionObserver(
       (entrys) => {
@@ -34,7 +33,7 @@ export const TxT = ({ posts, acative }: TxT) => {
           );
         }
       },
-      { root: null, threshold: 1 }
+      { root: PostTabRef.current, threshold: 1 }
     );
 
     PostItems.current.forEach((post) => {
@@ -52,7 +51,7 @@ export const TxT = ({ posts, acative }: TxT) => {
       <div
         ref={PostTabRef}
         id="userProfile-post-feed"
-        className="flex h-full w-full flex-col overflow-y-scroll scroll-smooth bg-slate-600 scrollbar-hide"
+        className="flex h-full w-full snap-y snap-mandatory flex-col overflow-y-scroll scroll-smooth bg-slate-600 scrollbar-hide"
       >
         {posts.map((post, i) => {
           return (
