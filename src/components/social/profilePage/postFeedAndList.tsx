@@ -100,8 +100,8 @@ export const TxTList: React.FC<TxTListType> = ({ acative, posts }) => {
   });
   return (
     <>
-      <div className="relative flex h-full w-full justify-end  overflow-x-clip overflow-y-scroll bg-[#0f172a]  scrollbar-hide">
-        <div className="pointer-events-none fixed h-full w-full shadow-t shadow-[#0f172a]"></div>
+      <div className="relative flex h-full w-full justify-end  overflow-x-clip overflow-y-scroll bg-black  scrollbar-hide">
+        <div className="pointer-events-none fixed h-full w-full shadow-t shadow-black"></div>
         <div className=" h-full w-full">
           <div className="3by3 h-7  pr-4 ">
             <span className="inline w-full cursor-pointer overflow-clip overflow-ellipsis whitespace-nowrap pl-24 text-xl font-semibold text-gray-400 hover:text-gray-300 active:text-blue-700"></span>

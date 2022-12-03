@@ -113,7 +113,7 @@ export const UserProfile = ({ name, image, type }: UserProfile) => {
   const Followers = 50;
   return (
     <>
-      <div className="profile relative h-96 w-full bg-[#0f172a]">
+      <div className="profile relative h-96 w-full bg-black">
         {/* useer banner  */}
         <div className="banner relative h-20 w-full bg-orange-300">
           <Image
@@ -125,9 +125,9 @@ export const UserProfile = ({ name, image, type }: UserProfile) => {
         {/* user image , name ,followers  */}
         <div className="ml-2 flex">
           {/* user image */}
-          <div className="dp relative mt-[-2.5rem]  h-32 w-32 rounded-full border-4 border-[#0f172a]">
+          <div className="dp relative mt-[-2.5rem]  h-32 w-32 rounded-full border-4 border-black">
             <Image
-              className="inline rounded-full border-2 border-[#0f172a] object-cover"
+              className="inline rounded-full border-2 border-black object-cover"
               src={image}
               alt={`anime image of banner of name`}
               layout={"fill"}

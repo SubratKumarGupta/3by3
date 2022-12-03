@@ -241,7 +241,7 @@ const Comment: React.FC<image> = ({ image }) => {
                         return (
                           <div key={i} className="relative h-6 w-6">
                             <Image
-                              className="rounded-full border border-[#0f172a] "
+                              className="rounded-full border  border-transparent "
                               src={imgSrc}
                               alt="Profile image"
                               fill={true}
@@ -407,7 +407,7 @@ export const Comments = ({ image }: { image: string }) => {
   const comments = posts;
   return (
     <>
-      <div className="relative overflow-x-clip overflow-y-scroll bg-[#0f172a] scrollbar-hide">
+      <div className="relative overflow-x-clip overflow-y-scroll bg-black scrollbar-hide">
         <div className="header flex justify-between">
           <div className="sortby group ">
             <div className="sortby-icon group ml-1 flex cursor-pointer">
