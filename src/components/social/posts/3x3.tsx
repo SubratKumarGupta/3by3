@@ -1,12 +1,12 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 import React from "react";
 type Post3x3Props = {
   name: string;
 };
-export const Post3x3: React.FC<Post3x3Props> = ({ name }) => {
+export const Post3x3: React.FC<Post3x3Props> = () => {
   const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const imgsrc =
-    "https://lh3.googleusercontent.com/a/ALm5wu2TBWpEn7bwuHzCy6spgnVerBcRI3SR792ySXcT=s96-c";
+    "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx127230-FlochcFsyoF4.png";
   return (
     <div className="snap-center  bg-black">
       <div className="header flex justify-between">
@@ -16,7 +16,7 @@ export const Post3x3: React.FC<Post3x3Props> = ({ name }) => {
               className="rounded-full border border-[#0f172a] "
               src={imgsrc}
               alt={"post image"}
-              fill={true}
+              layout={"fill"}
             ></Image>
           </div>
           <div className="ml-2">{`My Post Name`}</div>
@@ -41,10 +41,17 @@ export const Post3x3: React.FC<Post3x3Props> = ({ name }) => {
         {arr.map((v, i) => {
           return (
             <div
-              className="flex items-center justify-center bg-blue-500 transition-all hover:scale-125 hover:bg-cyan-600"
+              className="z-10 flex items-center justify-center bg-blue-500 transition-all hover:z-20 hover:scale-125 hover:bg-cyan-600"
               key={i}
             >
-              {name + i}
+              <div className="relative h-full w-full">
+                <Image
+                  src={imgsrc}
+                  alt={""}
+                  layout={"fill"}
+                  objectFit={"cover"}
+                />
+              </div>
             </div>
           );
         })}
