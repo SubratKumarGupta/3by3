@@ -239,7 +239,7 @@ export const Profile = () => {
     return (
       <>
         <div className="flex h-full w-full flex-col  bg-slate-500">
-          <UserProfile type={"FOLLOWING"} image={image} name={Username} />
+          <UserProfile type={"NOT_FOLLOWING"} image={image} name={Username} />
           <TxTList acative={acative} posts={posts} />
         </div>
 

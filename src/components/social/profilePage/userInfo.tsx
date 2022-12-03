@@ -151,7 +151,8 @@ export const UserProfile = ({ name, image, type }: UserProfile) => {
           />
         </div>
         {/* dit profile or detailes components */}
-        <div className="top-right absolute top-0 right-0 mr-3 mt-3 h-6 w-6 bg-lime-600">
+        <div className="top-right absolute top-0 right-0 mr-3 mt-3 flex h-7 w-12 items-center justify-center rounded-lg border bg-slate-400 text-lg font-semibold text-white opacity-70 hover:border-cyan-400 hover:bg-gray-700">
+          Edit
           {/* add edit profile or detailes components base on profile*/}
         </div>
         {/* Details */}
