@@ -11,13 +11,23 @@ services:
     command: dgraph zero --my=zero:5080
   alpha:
     image: dgraph/dgraph:latest
+    environment:
+      DGRAPH_ALPHA_GRAPHQL_LAMBDA_URL: "http://dgraph_lambda:8686/graphql-worker"
     volumes:
       - alpha:/dgraph
     ports:
       - 8080:8080
       - 9080:9080
     restart: on-failure
-    command: dgraph alpha --my=alpha:7080 --zero=zero:5080 --security " token=${DEV_DGRAPH_GRAPHQL_KEY} ; whitelist=0.0.0.0/0 " --cache size-mb=1024
+    command: dgraph alpha --my=alpha:7080 --zero=zero:5080 --security " token=${DEV_DGRAPH_GRAPHQL_KEY} ; whitelist=0.0.0.0/0 " --cache size-mb=1024       --graphql lambda-url=http://lambda:8686/graphql-worker
+  graph_lambda:
+    image: dgraph/dgraph-lambda:latest
+    ports:
+      - "8686:8686"
+    environment:
+      DGRAPH_URL: http://dgraph:8080
+    volumes:
+      - ./lambda/lambdas.js:/app/script/script.js:ro
   ratel:
     image: dgraph/ratel:latest
     ports:
@@ -29,3 +39,4 @@ volumes:
 # #whitelist=172.18.0.1
 # ODhhZWIwMzg5NTk0YmRjZWVhYzllODk4ZTU3ODA0NDQ
 # ODhhZWIwMzg5NTk0YmRjZWVhYzllODk4ZTU3ODA0NDQ
+

@@ -20,14 +20,8 @@ type Session {
   sessionToken: String @search(by: [hash])
   user: User @hasInverse(field: "sessions")
 }
-type Post {
-  id: ID
-  name: String! @search(by: [fulltext, exact])
-  createdAt: DateTime
-  description: String!
-  user: User @hasInverse(field: "posts")
-}
-type User {
+
+type User @lambdaOnMutate(add: true, update: true, delete: true) {
   id: ID
   createdAt: DateTime
   name: String @search(by: [fulltext, exact])
@@ -38,6 +32,67 @@ type User {
   posts: [Post] @hasInverse(field: "user")
   accounts: [Account] @hasInverse(field: "user")
   sessions: [Session] @hasInverse(field: "user")
+  createdCollections: [UserCratedCollection] @hasInverse(field: "user")
+}
+
+# ...---------Collection----------- ... #
+interface Collection {
+  id: ID!
+}
+interface CollectionEntry {
+  id: ID!
+  img: String!
+}
+
+# ...______User Created______
+type UserCratedCollection implements Collection {
+  createdAt: DateTime
+  name: String! @search(by: [fulltext])
+  entry: [UserCratedCollectionEntry]! @hasInverse(field: "userCratedCollection")
+  user: User! @hasInverse(field: "createdCollections")
+}
+
+type UserCratedCollectionEntry implements CollectionEntry {
+  name: String!
+  discription: String
+  externelLink: String
+  createdAt: DateTime
+  userCratedCollection: UserCratedCollection! @hasInverse(field: "entry")
+}
+
+# ...______defualt______
+enum DefultCollectionNames {
+  ANIME
+  MANGA
+  CHARACTER
+}
+type DefultCollection implements Collection {
+  name: String! @id
+  # ... later crete it on lamda mutai
+}
+type DefultCollectionEntry implements CollectionEntry {
+  collection: DefultCollection!
+  providersIdentifer: String!
+}
+
+union CollectionEntryUnion = DefultCollectionEntry | UserCratedCollectionEntry
+union CollectionUnion = DefultCollection | UserCratedCollection
+type Post {
+  id: ID
+  name: String! @search(by: [fulltext, exact])
+  createdAt: DateTime
+  description: String!
+  entry1: CollectionEntryUnion!
+  entry2: CollectionEntryUnion!
+  entry3: CollectionEntryUnion!
+  entry4: CollectionEntryUnion!
+  entry5: CollectionEntryUnion!
+  entry6: CollectionEntryUnion!
+  entry7: CollectionEntryUnion!
+  entry8: CollectionEntryUnion!
+  entry9: CollectionEntryUnion!
+  collection: CollectionUnion!
+  user: User! @hasInverse(field: "posts")
 }
 
 type VerificationToken {

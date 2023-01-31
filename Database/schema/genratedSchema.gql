@@ -26,15 +26,7 @@ type Session {
 	user(filter: UserFilter): User @hasInverse(field: "sessions")
 }
 
-type Post {
-	id: ID
-	name: String! @search(by: [fulltext,exact])
-	createdAt: DateTime
-	description: String!
-	user(filter: UserFilter): User @hasInverse(field: "posts")
-}
-
-type User {
+type User @lambdaOnMutate(add: true, update: true, delete: true) {
 	id: ID
 	createdAt: DateTime
 	name: String @search(by: [fulltext,exact])
@@ -45,9 +37,79 @@ type User {
 	posts(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post] @hasInverse(field: "user")
 	accounts(filter: AccountFilter, order: AccountOrder, first: Int, offset: Int): [Account] @hasInverse(field: "user")
 	sessions(filter: SessionFilter, order: SessionOrder, first: Int, offset: Int): [Session] @hasInverse(field: "user")
+	createdCollections(filter: UserCratedCollectionFilter, order: UserCratedCollectionOrder, first: Int, offset: Int): [UserCratedCollection] @hasInverse(field: "user")
 	postsAggregate(filter: PostFilter): PostAggregateResult
 	accountsAggregate(filter: AccountFilter): AccountAggregateResult
 	sessionsAggregate(filter: SessionFilter): SessionAggregateResult
+	createdCollectionsAggregate(filter: UserCratedCollectionFilter): UserCratedCollectionAggregateResult
+}
+
+interface Collection {
+	id: ID!
+}
+
+interface CollectionEntry {
+	id: ID!
+	img: String!
+}
+
+type UserCratedCollection implements Collection {
+	id: ID!
+	createdAt: DateTime
+	name: String! @search(by: [fulltext])
+	entry(filter: UserCratedCollectionEntryFilter, order: UserCratedCollectionEntryOrder, first: Int, offset: Int): [UserCratedCollectionEntry]! @hasInverse(field: "userCratedCollection")
+	user(filter: UserFilter): User! @hasInverse(field: "createdCollections")
+	entryAggregate(filter: UserCratedCollectionEntryFilter): UserCratedCollectionEntryAggregateResult
+}
+
+type UserCratedCollectionEntry implements CollectionEntry {
+	id: ID!
+	img: String!
+	name: String!
+	discription: String
+	externelLink: String
+	createdAt: DateTime
+	userCratedCollection(filter: UserCratedCollectionFilter): UserCratedCollection! @hasInverse(field: "entry")
+}
+
+enum DefultCollectionNames {
+	ANIME
+	MANGA
+	CHARACTER
+}
+
+type DefultCollection implements Collection {
+	id: ID!
+	name: String! @id
+}
+
+type DefultCollectionEntry implements CollectionEntry {
+	id: ID!
+	img: String!
+	collection(filter: DefultCollectionFilter): DefultCollection!
+	providersIdentifer: String!
+}
+
+union CollectionEntryUnion = DefultCollectionEntry | UserCratedCollectionEntry
+
+union CollectionUnion = DefultCollection | UserCratedCollection
+
+type Post {
+	id: ID
+	name: String! @search(by: [fulltext,exact])
+	createdAt: DateTime
+	description: String!
+	entry1(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	entry2(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	entry3(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	entry4(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	entry5(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	entry6(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	entry7(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	entry8(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	entry9(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	collection(filter: CollectionUnionFilter): CollectionUnion!
+	user(filter: UserFilter): User! @hasInverse(field: "posts")
 }
 
 type VerificationToken {
@@ -358,6 +420,16 @@ type AddAccountPayload {
 	numUids: Int
 }
 
+type AddDefultCollectionEntryPayload {
+	defultCollectionEntry(filter: DefultCollectionEntryFilter, order: DefultCollectionEntryOrder, first: Int, offset: Int): [DefultCollectionEntry]
+	numUids: Int
+}
+
+type AddDefultCollectionPayload {
+	defultCollection(filter: DefultCollectionFilter, order: DefultCollectionOrder, first: Int, offset: Int): [DefultCollection]
+	numUids: Int
+}
+
 type AddPostPayload {
 	post(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
 	numUids: Int
@@ -365,6 +437,16 @@ type AddPostPayload {
 
 type AddSessionPayload {
 	session(filter: SessionFilter, order: SessionOrder, first: Int, offset: Int): [Session]
+	numUids: Int
+}
+
+type AddUserCratedCollectionEntryPayload {
+	userCratedCollectionEntry(filter: UserCratedCollectionEntryFilter, order: UserCratedCollectionEntryOrder, first: Int, offset: Int): [UserCratedCollectionEntry]
+	numUids: Int
+}
+
+type AddUserCratedCollectionPayload {
+	userCratedCollection(filter: UserCratedCollectionFilter, order: UserCratedCollectionOrder, first: Int, offset: Int): [UserCratedCollection]
 	numUids: Int
 }
 
@@ -378,8 +460,56 @@ type AddVerificationTokenPayload {
 	numUids: Int
 }
 
+type CollectionAggregateResult {
+	count: Int
+}
+
+type CollectionEntryAggregateResult {
+	count: Int
+	imgMin: String
+	imgMax: String
+}
+
+type DefultCollectionAggregateResult {
+	count: Int
+	nameMin: String
+	nameMax: String
+}
+
+type DefultCollectionEntryAggregateResult {
+	count: Int
+	imgMin: String
+	imgMax: String
+	providersIdentiferMin: String
+	providersIdentiferMax: String
+}
+
 type DeleteAccountPayload {
 	account(filter: AccountFilter, order: AccountOrder, first: Int, offset: Int): [Account]
+	msg: String
+	numUids: Int
+}
+
+type DeleteCollectionEntryPayload {
+	collectionEntry(filter: CollectionEntryFilter, order: CollectionEntryOrder, first: Int, offset: Int): [CollectionEntry]
+	msg: String
+	numUids: Int
+}
+
+type DeleteCollectionPayload {
+	collection(filter: CollectionFilter, first: Int, offset: Int): [Collection]
+	msg: String
+	numUids: Int
+}
+
+type DeleteDefultCollectionEntryPayload {
+	defultCollectionEntry(filter: DefultCollectionEntryFilter, order: DefultCollectionEntryOrder, first: Int, offset: Int): [DefultCollectionEntry]
+	msg: String
+	numUids: Int
+}
+
+type DeleteDefultCollectionPayload {
+	defultCollection(filter: DefultCollectionFilter, order: DefultCollectionOrder, first: Int, offset: Int): [DefultCollection]
 	msg: String
 	numUids: Int
 }
@@ -392,6 +522,18 @@ type DeletePostPayload {
 
 type DeleteSessionPayload {
 	session(filter: SessionFilter, order: SessionOrder, first: Int, offset: Int): [Session]
+	msg: String
+	numUids: Int
+}
+
+type DeleteUserCratedCollectionEntryPayload {
+	userCratedCollectionEntry(filter: UserCratedCollectionEntryFilter, order: UserCratedCollectionEntryOrder, first: Int, offset: Int): [UserCratedCollectionEntry]
+	msg: String
+	numUids: Int
+}
+
+type DeleteUserCratedCollectionPayload {
+	userCratedCollection(filter: UserCratedCollectionFilter, order: UserCratedCollectionOrder, first: Int, offset: Int): [UserCratedCollection]
 	msg: String
 	numUids: Int
 }
@@ -431,6 +573,16 @@ type UpdateAccountPayload {
 	numUids: Int
 }
 
+type UpdateCollectionEntryPayload {
+	collectionEntry(filter: CollectionEntryFilter, order: CollectionEntryOrder, first: Int, offset: Int): [CollectionEntry]
+	numUids: Int
+}
+
+type UpdateDefultCollectionEntryPayload {
+	defultCollectionEntry(filter: DefultCollectionEntryFilter, order: DefultCollectionEntryOrder, first: Int, offset: Int): [DefultCollectionEntry]
+	numUids: Int
+}
+
 type UpdatePostPayload {
 	post(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
 	numUids: Int
@@ -438,6 +590,16 @@ type UpdatePostPayload {
 
 type UpdateSessionPayload {
 	session(filter: SessionFilter, order: SessionOrder, first: Int, offset: Int): [Session]
+	numUids: Int
+}
+
+type UpdateUserCratedCollectionEntryPayload {
+	userCratedCollectionEntry(filter: UserCratedCollectionEntryFilter, order: UserCratedCollectionEntryOrder, first: Int, offset: Int): [UserCratedCollectionEntry]
+	numUids: Int
+}
+
+type UpdateUserCratedCollectionPayload {
+	userCratedCollection(filter: UserCratedCollectionFilter, order: UserCratedCollectionOrder, first: Int, offset: Int): [UserCratedCollection]
 	numUids: Int
 }
 
@@ -465,6 +627,28 @@ type UserAggregateResult {
 	imageMax: String
 	descriptionMin: String
 	descriptionMax: String
+}
+
+type UserCratedCollectionAggregateResult {
+	count: Int
+	createdAtMin: DateTime
+	createdAtMax: DateTime
+	nameMin: String
+	nameMax: String
+}
+
+type UserCratedCollectionEntryAggregateResult {
+	count: Int
+	imgMin: String
+	imgMax: String
+	nameMin: String
+	nameMax: String
+	discriptionMin: String
+	discriptionMax: String
+	externelLinkMin: String
+	externelLinkMax: String
+	createdAtMin: DateTime
+	createdAtMax: DateTime
 }
 
 type VerificationTokenAggregateResult {
@@ -512,10 +696,57 @@ enum AccountOrderable {
 	session_state
 }
 
+enum CollectionEntryHasFilter {
+	img
+}
+
+enum CollectionEntryOrderable {
+	img
+}
+
+enum CollectionEntryUnionType {
+	DefultCollectionEntry
+	UserCratedCollectionEntry
+}
+
+enum CollectionUnionType {
+	DefultCollection
+	UserCratedCollection
+}
+
+enum DefultCollectionEntryHasFilter {
+	img
+	collection
+	providersIdentifer
+}
+
+enum DefultCollectionEntryOrderable {
+	img
+	providersIdentifer
+}
+
+enum DefultCollectionHasFilter {
+	name
+}
+
+enum DefultCollectionOrderable {
+	name
+}
+
 enum PostHasFilter {
 	name
 	createdAt
 	description
+	entry1
+	entry2
+	entry3
+	entry4
+	entry5
+	entry6
+	entry7
+	entry8
+	entry9
+	collection
 	user
 }
 
@@ -536,6 +767,35 @@ enum SessionOrderable {
 	sessionToken
 }
 
+enum UserCratedCollectionEntryHasFilter {
+	img
+	name
+	discription
+	externelLink
+	createdAt
+	userCratedCollection
+}
+
+enum UserCratedCollectionEntryOrderable {
+	img
+	name
+	discription
+	externelLink
+	createdAt
+}
+
+enum UserCratedCollectionHasFilter {
+	createdAt
+	name
+	entry
+	user
+}
+
+enum UserCratedCollectionOrderable {
+	createdAt
+	name
+}
+
 enum UserHasFilter {
 	createdAt
 	name
@@ -546,6 +806,7 @@ enum UserHasFilter {
 	posts
 	accounts
 	sessions
+	createdCollections
 }
 
 enum UserOrderable {
@@ -638,17 +899,53 @@ input AddAccountInput {
 	user: UserRef
 }
 
+input AddDefultCollectionEntryInput {
+	img: String!
+	collection: DefultCollectionRef!
+	providersIdentifer: String!
+}
+
+input AddDefultCollectionInput {
+	name: String!
+}
+
 input AddPostInput {
 	name: String!
 	createdAt: DateTime
 	description: String!
-	user: UserRef
+	entry1: CollectionEntryUnionRef!
+	entry2: CollectionEntryUnionRef!
+	entry3: CollectionEntryUnionRef!
+	entry4: CollectionEntryUnionRef!
+	entry5: CollectionEntryUnionRef!
+	entry6: CollectionEntryUnionRef!
+	entry7: CollectionEntryUnionRef!
+	entry8: CollectionEntryUnionRef!
+	entry9: CollectionEntryUnionRef!
+	collection: CollectionUnionRef!
+	user: UserRef!
 }
 
 input AddSessionInput {
 	expires: DateTime
 	sessionToken: String
 	user: UserRef
+}
+
+input AddUserCratedCollectionEntryInput {
+	img: String!
+	name: String!
+	discription: String
+	externelLink: String
+	createdAt: DateTime
+	userCratedCollection: UserCratedCollectionRef!
+}
+
+input AddUserCratedCollectionInput {
+	createdAt: DateTime
+	name: String!
+	entry: [UserCratedCollectionEntryRef]!
+	user: UserRef!
 }
 
 input AddUserInput {
@@ -661,12 +958,113 @@ input AddUserInput {
 	posts: [PostRef]
 	accounts: [AccountRef]
 	sessions: [SessionRef]
+	createdCollections: [UserCratedCollectionRef]
 }
 
 input AddVerificationTokenInput {
 	identifier: String
 	token: String
 	expires: DateTime
+}
+
+input CollectionEntryFilter {
+	id: [ID!]
+	has: [CollectionEntryHasFilter]
+	and: [CollectionEntryFilter]
+	or: [CollectionEntryFilter]
+	not: CollectionEntryFilter
+}
+
+input CollectionEntryOrder {
+	asc: CollectionEntryOrderable
+	desc: CollectionEntryOrderable
+	then: CollectionEntryOrder
+}
+
+input CollectionEntryPatch {
+	img: String
+}
+
+input CollectionEntryRef {
+	id: ID!
+}
+
+input CollectionEntryUnionFilter {
+	memberTypes: [CollectionEntryUnionType!]
+	defultCollectionEntryFilter: DefultCollectionEntryFilter
+	userCratedCollectionEntryFilter: UserCratedCollectionEntryFilter
+}
+
+input CollectionEntryUnionRef {
+	defultCollectionEntryRef: DefultCollectionEntryRef
+	userCratedCollectionEntryRef: UserCratedCollectionEntryRef
+}
+
+input CollectionFilter {
+	id: [ID!]
+	not: CollectionFilter
+}
+
+input CollectionRef {
+	id: ID!
+}
+
+input CollectionUnionFilter {
+	memberTypes: [CollectionUnionType!]
+	defultCollectionFilter: DefultCollectionFilter
+	userCratedCollectionFilter: UserCratedCollectionFilter
+}
+
+input CollectionUnionRef {
+	defultCollectionRef: DefultCollectionRef
+	userCratedCollectionRef: UserCratedCollectionRef
+}
+
+input DefultCollectionEntryFilter {
+	id: [ID!]
+	has: [DefultCollectionEntryHasFilter]
+	and: [DefultCollectionEntryFilter]
+	or: [DefultCollectionEntryFilter]
+	not: DefultCollectionEntryFilter
+}
+
+input DefultCollectionEntryOrder {
+	asc: DefultCollectionEntryOrderable
+	desc: DefultCollectionEntryOrderable
+	then: DefultCollectionEntryOrder
+}
+
+input DefultCollectionEntryPatch {
+	img: String
+	collection: DefultCollectionRef
+	providersIdentifer: String
+}
+
+input DefultCollectionEntryRef {
+	id: ID
+	img: String
+	collection: DefultCollectionRef
+	providersIdentifer: String
+}
+
+input DefultCollectionFilter {
+	id: [ID!]
+	name: StringHashFilter
+	has: [DefultCollectionHasFilter]
+	and: [DefultCollectionFilter]
+	or: [DefultCollectionFilter]
+	not: DefultCollectionFilter
+}
+
+input DefultCollectionOrder {
+	asc: DefultCollectionOrderable
+	desc: DefultCollectionOrderable
+	then: DefultCollectionOrder
+}
+
+input DefultCollectionRef {
+	id: ID
+	name: String
 }
 
 input PostFilter {
@@ -688,6 +1086,16 @@ input PostPatch {
 	name: String
 	createdAt: DateTime
 	description: String
+	entry1: CollectionEntryUnionRef
+	entry2: CollectionEntryUnionRef
+	entry3: CollectionEntryUnionRef
+	entry4: CollectionEntryUnionRef
+	entry5: CollectionEntryUnionRef
+	entry6: CollectionEntryUnionRef
+	entry7: CollectionEntryUnionRef
+	entry8: CollectionEntryUnionRef
+	entry9: CollectionEntryUnionRef
+	collection: CollectionUnionRef
 	user: UserRef
 }
 
@@ -696,6 +1104,16 @@ input PostRef {
 	name: String
 	createdAt: DateTime
 	description: String
+	entry1: CollectionEntryUnionRef
+	entry2: CollectionEntryUnionRef
+	entry3: CollectionEntryUnionRef
+	entry4: CollectionEntryUnionRef
+	entry5: CollectionEntryUnionRef
+	entry6: CollectionEntryUnionRef
+	entry7: CollectionEntryUnionRef
+	entry8: CollectionEntryUnionRef
+	entry9: CollectionEntryUnionRef
+	collection: CollectionUnionRef
 	user: UserRef
 }
 
@@ -745,6 +1163,18 @@ input UpdateAccountInput {
 	remove: AccountPatch
 }
 
+input UpdateCollectionEntryInput {
+	filter: CollectionEntryFilter!
+	set: CollectionEntryPatch
+	remove: CollectionEntryPatch
+}
+
+input UpdateDefultCollectionEntryInput {
+	filter: DefultCollectionEntryFilter!
+	set: DefultCollectionEntryPatch
+	remove: DefultCollectionEntryPatch
+}
+
 input UpdatePostInput {
 	filter: PostFilter!
 	set: PostPatch
@@ -757,6 +1187,18 @@ input UpdateSessionInput {
 	remove: SessionPatch
 }
 
+input UpdateUserCratedCollectionEntryInput {
+	filter: UserCratedCollectionEntryFilter!
+	set: UserCratedCollectionEntryPatch
+	remove: UserCratedCollectionEntryPatch
+}
+
+input UpdateUserCratedCollectionInput {
+	filter: UserCratedCollectionFilter!
+	set: UserCratedCollectionPatch
+	remove: UserCratedCollectionPatch
+}
+
 input UpdateUserInput {
 	filter: UserFilter!
 	set: UserPatch
@@ -767,6 +1209,69 @@ input UpdateVerificationTokenInput {
 	filter: VerificationTokenFilter!
 	set: VerificationTokenPatch
 	remove: VerificationTokenPatch
+}
+
+input UserCratedCollectionEntryFilter {
+	id: [ID!]
+	has: [UserCratedCollectionEntryHasFilter]
+	and: [UserCratedCollectionEntryFilter]
+	or: [UserCratedCollectionEntryFilter]
+	not: UserCratedCollectionEntryFilter
+}
+
+input UserCratedCollectionEntryOrder {
+	asc: UserCratedCollectionEntryOrderable
+	desc: UserCratedCollectionEntryOrderable
+	then: UserCratedCollectionEntryOrder
+}
+
+input UserCratedCollectionEntryPatch {
+	img: String
+	name: String
+	discription: String
+	externelLink: String
+	createdAt: DateTime
+	userCratedCollection: UserCratedCollectionRef
+}
+
+input UserCratedCollectionEntryRef {
+	id: ID
+	img: String
+	name: String
+	discription: String
+	externelLink: String
+	createdAt: DateTime
+	userCratedCollection: UserCratedCollectionRef
+}
+
+input UserCratedCollectionFilter {
+	id: [ID!]
+	name: StringFullTextFilter
+	has: [UserCratedCollectionHasFilter]
+	and: [UserCratedCollectionFilter]
+	or: [UserCratedCollectionFilter]
+	not: UserCratedCollectionFilter
+}
+
+input UserCratedCollectionOrder {
+	asc: UserCratedCollectionOrderable
+	desc: UserCratedCollectionOrderable
+	then: UserCratedCollectionOrder
+}
+
+input UserCratedCollectionPatch {
+	createdAt: DateTime
+	name: String
+	entry: [UserCratedCollectionEntryRef]
+	user: UserRef
+}
+
+input UserCratedCollectionRef {
+	id: ID
+	createdAt: DateTime
+	name: String
+	entry: [UserCratedCollectionEntryRef]
+	user: UserRef
 }
 
 input UserFilter {
@@ -795,6 +1300,7 @@ input UserPatch {
 	posts: [PostRef]
 	accounts: [AccountRef]
 	sessions: [SessionRef]
+	createdCollections: [UserCratedCollectionRef]
 }
 
 input UserRef {
@@ -808,6 +1314,7 @@ input UserRef {
 	posts: [PostRef]
 	accounts: [AccountRef]
 	sessions: [SessionRef]
+	createdCollections: [UserCratedCollectionRef]
 }
 
 input VerificationTokenFilter {
@@ -850,12 +1357,30 @@ type Query {
 	getSession(id: ID!): Session
 	querySession(filter: SessionFilter, order: SessionOrder, first: Int, offset: Int): [Session]
 	aggregateSession(filter: SessionFilter): SessionAggregateResult
-	getPost(id: ID!): Post
-	queryPost(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
-	aggregatePost(filter: PostFilter): PostAggregateResult
 	getUser(id: ID!): User
 	queryUser(filter: UserFilter, order: UserOrder, first: Int, offset: Int): [User]
 	aggregateUser(filter: UserFilter): UserAggregateResult
+	getCollection(id: ID!): Collection
+	queryCollection(filter: CollectionFilter, first: Int, offset: Int): [Collection]
+	aggregateCollection(filter: CollectionFilter): CollectionAggregateResult
+	getCollectionEntry(id: ID!): CollectionEntry
+	queryCollectionEntry(filter: CollectionEntryFilter, order: CollectionEntryOrder, first: Int, offset: Int): [CollectionEntry]
+	aggregateCollectionEntry(filter: CollectionEntryFilter): CollectionEntryAggregateResult
+	getUserCratedCollection(id: ID!): UserCratedCollection
+	queryUserCratedCollection(filter: UserCratedCollectionFilter, order: UserCratedCollectionOrder, first: Int, offset: Int): [UserCratedCollection]
+	aggregateUserCratedCollection(filter: UserCratedCollectionFilter): UserCratedCollectionAggregateResult
+	getUserCratedCollectionEntry(id: ID!): UserCratedCollectionEntry
+	queryUserCratedCollectionEntry(filter: UserCratedCollectionEntryFilter, order: UserCratedCollectionEntryOrder, first: Int, offset: Int): [UserCratedCollectionEntry]
+	aggregateUserCratedCollectionEntry(filter: UserCratedCollectionEntryFilter): UserCratedCollectionEntryAggregateResult
+	getDefultCollection(id: ID, name: String): DefultCollection
+	queryDefultCollection(filter: DefultCollectionFilter, order: DefultCollectionOrder, first: Int, offset: Int): [DefultCollection]
+	aggregateDefultCollection(filter: DefultCollectionFilter): DefultCollectionAggregateResult
+	getDefultCollectionEntry(id: ID!): DefultCollectionEntry
+	queryDefultCollectionEntry(filter: DefultCollectionEntryFilter, order: DefultCollectionEntryOrder, first: Int, offset: Int): [DefultCollectionEntry]
+	aggregateDefultCollectionEntry(filter: DefultCollectionEntryFilter): DefultCollectionEntryAggregateResult
+	getPost(id: ID!): Post
+	queryPost(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
+	aggregatePost(filter: PostFilter): PostAggregateResult
 	getVerificationToken(id: ID!): VerificationToken
 	queryVerificationToken(filter: VerificationTokenFilter, order: VerificationTokenOrder, first: Int, offset: Int): [VerificationToken]
 	aggregateVerificationToken(filter: VerificationTokenFilter): VerificationTokenAggregateResult
@@ -872,12 +1397,26 @@ type Mutation {
 	addSession(input: [AddSessionInput!]!): AddSessionPayload
 	updateSession(input: UpdateSessionInput!): UpdateSessionPayload
 	deleteSession(filter: SessionFilter!): DeleteSessionPayload
-	addPost(input: [AddPostInput!]!): AddPostPayload
-	updatePost(input: UpdatePostInput!): UpdatePostPayload
-	deletePost(filter: PostFilter!): DeletePostPayload
 	addUser(input: [AddUserInput!]!): AddUserPayload
 	updateUser(input: UpdateUserInput!): UpdateUserPayload
 	deleteUser(filter: UserFilter!): DeleteUserPayload
+	deleteCollection(filter: CollectionFilter!): DeleteCollectionPayload
+	updateCollectionEntry(input: UpdateCollectionEntryInput!): UpdateCollectionEntryPayload
+	deleteCollectionEntry(filter: CollectionEntryFilter!): DeleteCollectionEntryPayload
+	addUserCratedCollection(input: [AddUserCratedCollectionInput!]!): AddUserCratedCollectionPayload
+	updateUserCratedCollection(input: UpdateUserCratedCollectionInput!): UpdateUserCratedCollectionPayload
+	deleteUserCratedCollection(filter: UserCratedCollectionFilter!): DeleteUserCratedCollectionPayload
+	addUserCratedCollectionEntry(input: [AddUserCratedCollectionEntryInput!]!): AddUserCratedCollectionEntryPayload
+	updateUserCratedCollectionEntry(input: UpdateUserCratedCollectionEntryInput!): UpdateUserCratedCollectionEntryPayload
+	deleteUserCratedCollectionEntry(filter: UserCratedCollectionEntryFilter!): DeleteUserCratedCollectionEntryPayload
+	addDefultCollection(input: [AddDefultCollectionInput!]!, upsert: Boolean): AddDefultCollectionPayload
+	deleteDefultCollection(filter: DefultCollectionFilter!): DeleteDefultCollectionPayload
+	addDefultCollectionEntry(input: [AddDefultCollectionEntryInput!]!): AddDefultCollectionEntryPayload
+	updateDefultCollectionEntry(input: UpdateDefultCollectionEntryInput!): UpdateDefultCollectionEntryPayload
+	deleteDefultCollectionEntry(filter: DefultCollectionEntryFilter!): DeleteDefultCollectionEntryPayload
+	addPost(input: [AddPostInput!]!): AddPostPayload
+	updatePost(input: UpdatePostInput!): UpdatePostPayload
+	deletePost(filter: PostFilter!): DeletePostPayload
 	addVerificationToken(input: [AddVerificationTokenInput!]!): AddVerificationTokenPayload
 	updateVerificationToken(input: UpdateVerificationTokenInput!): UpdateVerificationTokenPayload
 	deleteVerificationToken(filter: VerificationTokenFilter!): DeleteVerificationTokenPayload
