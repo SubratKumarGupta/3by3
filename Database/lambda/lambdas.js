@@ -1,5 +1,6 @@
 async function updateTimestamps({ event, dql, graphql }) {
-  console.log("somthing");
+  console.log("somthing", event);
+
   //   const op = event.operation === "delete" ? "delete" : "set";
   //   const field = event.operation === "add" ? "createdAt" : "updatedAt";
   //   const uid = event[event.operation].rootUIDs[0];
@@ -40,4 +41,11 @@ self.addWebHookResolvers({
   "User.add": updateTimestamps,
   "User.update": updateTimestamps,
   "User.delete": updateTimestamps,
+});
+
+self.addWebHookResolvers({
+  "Session.add": updateTimestamps,
+  "Session.delete": updateTimestamps,
+  "DefultCollection.add": updateTimestamps,
+  "DefultCollection.delete": updateTimestamps,
 });

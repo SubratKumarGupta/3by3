@@ -14,7 +14,7 @@ type Account {
   session_state: String
   user: User @hasInverse(field: "accounts")
 }
-type Session {
+type Session @lambdaOnMutate(add: true, update: true, delete: true) {
   id: ID
   expires: DateTime
   sessionToken: String @search(by: [hash])
@@ -66,7 +66,8 @@ enum DefultCollectionNames {
   MANGA
   CHARACTER
 }
-type DefultCollection implements Collection {
+type DefultCollection implements Collection
+  @lambdaOnMutate(add: true, update: true, delete: true) {
   name: String! @id
   # ... later crete it on lamda mutai
 }

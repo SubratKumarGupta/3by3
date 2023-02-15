@@ -7,7 +7,7 @@ async function updateTimestamps({
   graphql,
   authHeader,
 }: WebHookGraphQLEvent) {
-  //   console.log("somthing");
+  console.log("somthing");
   //   const op = event.operation === "delete" ? "delete" : "set";
   //   const field = event.operation === "add" ? "createdAt" : "updatedAt";
   //   const uid = event[event.operation].rootUIDs[0];
@@ -39,11 +39,16 @@ async function updateTimestamps({
   //                   }
   //               }
   //           }`;
-  //   const r = await graphql();
+  const r = { a: "aa" }; //await graphql();
+  return r;
   console.log("somthing");
 }
 
 addWebHookResolvers({
+  "Session.add": updateTimestamps,
+  "Session.delete": updateTimestamps,
+  "DefultCollection.add": updateTimestamps,
+  "DefultCollection.delete": updateTimestamps,
   "User.add": updateTimestamps,
   "User.update": updateTimestamps,
   "User.delete": updateTimestamps,

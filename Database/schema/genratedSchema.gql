@@ -19,7 +19,7 @@ type Account {
 	user(filter: UserFilter): User @hasInverse(field: "accounts")
 }
 
-type Session {
+type Session @lambdaOnMutate(add: true, update: true, delete: true) {
 	id: ID
 	expires: DateTime
 	sessionToken: String @search(by: [hash])
@@ -78,7 +78,7 @@ enum DefultCollectionNames {
 	CHARACTER
 }
 
-type DefultCollection implements Collection {
+type DefultCollection implements Collection @lambdaOnMutate(add: true, update: true, delete: true) {
 	id: ID!
 	name: String! @id
 }
