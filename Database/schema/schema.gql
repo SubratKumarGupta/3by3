@@ -83,15 +83,7 @@ type Post {
   name: String! @search(by: [fulltext, exact])
   createdAt: DateTime
   description: String!
-  entry1: CollectionEntryUnion!
-  entry2: CollectionEntryUnion!
-  entry3: CollectionEntryUnion!
-  entry4: CollectionEntryUnion!
-  entry5: CollectionEntryUnion!
-  entry6: CollectionEntryUnion!
-  entry7: CollectionEntryUnion!
-  entry8: CollectionEntryUnion!
-  entry9: CollectionEntryUnion!
+  entrys: [CollectionEntryUnion!]
   collection: CollectionUnion!
   user: User! @hasInverse(field: "posts")
 }

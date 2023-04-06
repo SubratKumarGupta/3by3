@@ -99,15 +99,7 @@ type Post {
 	name: String! @search(by: [fulltext,exact])
 	createdAt: DateTime
 	description: String!
-	entry1(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
-	entry2(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
-	entry3(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
-	entry4(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
-	entry5(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
-	entry6(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
-	entry7(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
-	entry8(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
-	entry9(filter: CollectionEntryUnionFilter): CollectionEntryUnion!
+	entrys(filter: CollectionEntryUnionFilter, first: Int, offset: Int): [CollectionEntryUnion!]
 	collection(filter: CollectionUnionFilter): CollectionUnion!
 	user(filter: UserFilter): User! @hasInverse(field: "posts")
 }
@@ -737,15 +729,7 @@ enum PostHasFilter {
 	name
 	createdAt
 	description
-	entry1
-	entry2
-	entry3
-	entry4
-	entry5
-	entry6
-	entry7
-	entry8
-	entry9
+	entrys
 	collection
 	user
 }
@@ -913,15 +897,7 @@ input AddPostInput {
 	name: String!
 	createdAt: DateTime
 	description: String!
-	entry1: CollectionEntryUnionRef!
-	entry2: CollectionEntryUnionRef!
-	entry3: CollectionEntryUnionRef!
-	entry4: CollectionEntryUnionRef!
-	entry5: CollectionEntryUnionRef!
-	entry6: CollectionEntryUnionRef!
-	entry7: CollectionEntryUnionRef!
-	entry8: CollectionEntryUnionRef!
-	entry9: CollectionEntryUnionRef!
+	entrys: [CollectionEntryUnionRef!]
 	collection: CollectionUnionRef!
 	user: UserRef!
 }
@@ -1086,15 +1062,7 @@ input PostPatch {
 	name: String
 	createdAt: DateTime
 	description: String
-	entry1: CollectionEntryUnionRef
-	entry2: CollectionEntryUnionRef
-	entry3: CollectionEntryUnionRef
-	entry4: CollectionEntryUnionRef
-	entry5: CollectionEntryUnionRef
-	entry6: CollectionEntryUnionRef
-	entry7: CollectionEntryUnionRef
-	entry8: CollectionEntryUnionRef
-	entry9: CollectionEntryUnionRef
+	entrys: [CollectionEntryUnionRef!]
 	collection: CollectionUnionRef
 	user: UserRef
 }
@@ -1104,15 +1072,7 @@ input PostRef {
 	name: String
 	createdAt: DateTime
 	description: String
-	entry1: CollectionEntryUnionRef
-	entry2: CollectionEntryUnionRef
-	entry3: CollectionEntryUnionRef
-	entry4: CollectionEntryUnionRef
-	entry5: CollectionEntryUnionRef
-	entry6: CollectionEntryUnionRef
-	entry7: CollectionEntryUnionRef
-	entry8: CollectionEntryUnionRef
-	entry9: CollectionEntryUnionRef
+	entrys: [CollectionEntryUnionRef!]
 	collection: CollectionUnionRef
 	user: UserRef
 }
