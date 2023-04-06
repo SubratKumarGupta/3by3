@@ -8,6 +8,7 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { AnimeT3TBoard } from "./anime/3x3/3x3";
 import { CharacterT3TBoard } from "./character/3x3/3x3";
+import { Intreaction } from "./dndintraction/interictions";
 import { MangaT3TBoard } from "./manga/3x3/3x3";
 import { Selector } from "./selector";
 
@@ -28,6 +29,7 @@ export const DndElements: React.FC<props> = ({ type }: props) => {
           <div className="bg grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center">
             <CharacterT3TBoard />
             <Selector type={type} />
+            <Intreaction />
           </div>
         </DndContext>
       </>
@@ -39,6 +41,7 @@ export const DndElements: React.FC<props> = ({ type }: props) => {
           <div className="bg grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center">
             <AnimeT3TBoard />
             <Selector type={type} />
+            <Intreaction />
           </div>
         </DndContext>
       </>
@@ -50,6 +53,7 @@ export const DndElements: React.FC<props> = ({ type }: props) => {
           <div className="bg grid h-[100%] w-[100%] grid-cols-[70%,30%] grid-rows-[85%] items-center justify-items-center">
             <MangaT3TBoard />
             <Selector type={type} />
+            <Intreaction />
           </div>
         </DndContext>
       </>
