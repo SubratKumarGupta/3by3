@@ -5,10 +5,13 @@ const Preview: NextPage = () => {
   return (
     <Head>
       <title>Hello world</title>
-      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@nytimesbits" />
       <meta name="twitter:creator" content="@nickbilton" />
-      <meta property="og:url" content="http://localhost:3000/api/og" />
+      <meta
+        property="og:url"
+        content="https://og-examples.vercel.sh/api/static"
+      />
       <meta property="og:title" content="A Twitter for My Sister" />
       <meta
         property="og:description"
