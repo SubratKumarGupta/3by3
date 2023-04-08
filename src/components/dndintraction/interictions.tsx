@@ -1,9 +1,51 @@
-interface Props {
+import React, { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+interface ShareOnTwitterProps {
   text: string; // the text to share on Twitter
   url: string; // the URL to share
 }
+interface ImageDownloaderProps {
+  imageUrl: string;
+  fileName: string;
+}
 
-const ShareOnTwitter: React.FC<Props> = ({ text, url }) => {
+const ImageDownloader: React.FC<ImageDownloaderProps> = ({
+  imageUrl,
+  fileName,
+}) => {
+  const [error, setError] = useState(false);
+
+  const handleClick = () => {
+    fetch(imageUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+      .catch(() => {
+        setError(true);
+      });
+  };
+
+  return (
+    <div>
+      <button onClick={handleClick}>Download Image</button>
+      {error && <p>Error downloading image.</p>}
+    </div>
+  );
+};
+
+const ShareOnTwitter: React.FC<ShareOnTwitterProps> = ({ text, url }) => {
   const handleClick = () => {
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       text
@@ -40,7 +82,12 @@ const Intreaction = () => {
             url="http://localhost:3000/create3x3/previewImage"
           />
         </div>
-        <div className="downloade">downloade</div>
+        <div className="downloade">
+          <ImageDownloader
+            imageUrl="http://localhost:3000/api/og?size=8&images=http%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100"
+            fileName="test 1"
+          />
+        </div>
         <div className="save">save</div>
       </div>
     </>
