@@ -1,9 +1,56 @@
-import React, { useState, useEffect } from "react";
-import { useQuery } from "react-query";
+import React, { useState } from "react";
+import useCharacterDndStore from "../character/characterstate";
+import useMangaDndStore from "../manga/mangastate";
+import useAnimeDndStore from "../anime/animestate";
+
+import { useQuery, QueryClient, QueryClientProvider } from "react-query";
+import { props as dndTypes } from "../Dnd";
 interface ShareOnTwitterProps {
   text: string; // the text to share on Twitter
   url: string; // the URL to share
 }
+// interface ImageDownloaderProps {
+//   imageUrl: string;
+//   fileName: string;
+// }
+
+// const ImageDownloader: React.FC<ImageDownloaderProps> = ({
+//   imageUrl,
+//   fileName,
+// }) => {
+//   const [error, setError] = useState(false);
+
+//   const handleClick = () => {
+//     fetch(imageUrl)
+//       .then((response) => {
+//         if (!response.ok) {
+//           throw new Error("Network response was not ok");
+//         }
+//         return response.blob();
+//       })
+//       .then((blob) => {
+//         console.log("RR", blob);
+//         const url = window.URL.createObjectURL(blob);
+//         const link = document.createElement("a");
+//         link.href = url;
+//         link.download = fileName;
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+//       })
+//       .catch(() => {
+//         setError(true);
+//       });
+//   };
+
+//   return (
+//     <div>
+//       <button onClick={handleClick}>Download Image</button>
+//       {error && <p> ferror wile downloding images</p>}
+//     </div>
+//   );
+// };
+
 interface ImageDownloaderProps {
   imageUrl: string;
   fileName: string;
@@ -14,33 +61,47 @@ const ImageDownloader: React.FC<ImageDownloaderProps> = ({
   fileName,
 }) => {
   const [error, setError] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  const handleClick = () => {
-    fetch(imageUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      })
-      .catch(() => {
-        setError(true);
-      });
+  const handleClick = async () => {
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const total = Number(response.headers.get("content-length"));
+      const readableStream = response.body ?? null;
+      if (!readableStream) {
+        throw new Error("ReadableStream is null or undefined");
+      }
+      const reader = readableStream.getReader();
+      let received = 0;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        received += value?.length ?? 0;
+        setProgress((received / total) * 100);
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (e) {
+      setError(true);
+    }
   };
 
   return (
     <div>
       <button onClick={handleClick}>Download Image</button>
-      {error && <p>Error downloading image.</p>}
+      {error && <p>Error while downloading image.</p>}
+      {progress > 0 && progress < 100 && (
+        <progress value={progress} max="100" />
+      )}
     </div>
   );
 };
@@ -72,7 +133,49 @@ const ShareOnTwitter: React.FC<ShareOnTwitterProps> = ({ text, url }) => {
     </button>
   );
 };
-const Intreaction = () => {
+
+const Intreaction: React.FC<dndTypes> = ({ type }) => {
+  const animeBoard = useAnimeDndStore((state) => state.boardItems);
+  const characterBoard = useCharacterDndStore((state) => state.boardItems);
+  const mangaBoard = useMangaDndStore((state) => state.boardItems);
+  let board;
+  switch (type) {
+    case "ANIME":
+      board = animeBoard;
+      break;
+    case "CHARACTER":
+      board = characterBoard;
+      break;
+    case "MANGA":
+      board = mangaBoard;
+      break;
+  }
+
+  const imageArray = board.map(({ img }) => img);
+
+  const checkIfImageArrayValid = (arr: typeof imageArray): boolean => {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === null) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const create3x3ImageUrl = (
+    prefix: string,
+    size: number,
+    images: string[]
+  ): URL => {
+    const url = new URL(prefix);
+    url.searchParams.set("size", size.toString());
+    url.searchParams.append("images", JSON.stringify(images));
+    console.log("urla", url);
+    //images.forEach((u) => url.searchParams.append("images", u));
+    return url;
+  };
+  // create a 3x3 image link
+
   return (
     <>
       <div className=" flex w-full justify-around  text-white">
@@ -84,25 +187,47 @@ const Intreaction = () => {
         </div>
         <div className="downloade">
           <ImageDownloader
-            imageUrl="http://localhost:3000/api/og?size=8&images=http%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100"
+            imageUrl={
+              checkIfImageArrayValid(imageArray)
+                ? create3x3ImageUrl(
+                    "http://localhost:3000/api/og",
+                    8,
+                    imageArray.filter((img) => img !== null) as string[]
+                  ).toString()
+                : create3x3ImageUrl(
+                    "http://localhost:3000/api/og",
+                    8,
+                    imageArray.filter((img) => img !== null) as string[]
+                  ).toString()
+            }
+            // imageUrl={
+
+            // }
             fileName="test 1"
           />
         </div>
-        <div className="save">save</div>
+        <div className="save">
+          <a
+            href={
+              checkIfImageArrayValid(imageArray)
+                ? create3x3ImageUrl(
+                    "http://localhost:3000/api/og",
+                    8,
+                    imageArray.filter((img) => img !== null) as string[]
+                  ).toString()
+                : create3x3ImageUrl(
+                    "http://localhost:3000/api/og",
+                    8,
+                    imageArray.filter((img) => img !== null) as string[]
+                  ).toString()
+            }
+          >
+            <button>Go to Example</button>
+          </a>
+        </div>
       </div>
     </>
   );
-};
-
-type moveAcativeType = {
-  format: string;
-  id: number;
-  img: string;
-  titleEng: string;
-  titleRom: string;
-};
-const MangaT3TBoard = () => {
-  return <></>;
 };
 
 export { Intreaction };

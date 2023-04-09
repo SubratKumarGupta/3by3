@@ -9,6 +9,8 @@ export const config = {
 
 //http://localhost:3000/api/og?size=8&images=http%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100
 
+//https://3by3-881th86f9-subratkumargupta.vercel.app/api/og?size=8&images=http%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100%2Chttp%3A%2F%2Flocalhost%3A3000%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fs4.anilist.co%252Ffile%252Fanilistcdn%252Fmedia%252Fanime%252Fcover%252Flarge%252Fbx21519-XIr3PeczUjjF.png%26w%3D1920%26q%3D100
+
 const searchParamsSchema = z.object({
   images: z.array(z.string().url()).length(9),
   size: z.number().int().min(5).max(24),
@@ -20,11 +22,10 @@ export default function handler(req: NextApiRequest) {
   }
 
   const { searchParams } = new URL(req.url);
-
+  const imageArray = JSON.parse(searchParams.get("images")!);
   const Result = searchParamsSchema.safeParse({
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     size: searchParams.get("size") ? parseInt(searchParams.get("size")!) : null,
-    images: searchParams.get("images")?.split(","),
+    images: imageArray ? imageArray : null,
   });
   if (Result.success === false) {
     return new Response(
@@ -35,7 +36,7 @@ export default function handler(req: NextApiRequest) {
           size: searchParams.get("size")
             ? parseInt(searchParams.get("size")!)
             : null,
-          images: searchParams.get("images")?.split(","),
+          images: imageArray,
         },
       }),
       {
